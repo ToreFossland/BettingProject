@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.js": "/ToreFossland/BetBuddy.git/static/js/main.bd976e26.chunk.js",
+    "main.js.map": "/ToreFossland/BetBuddy.git/static/js/main.bd976e26.chunk.js.map",
+    "runtime-main.js": "/ToreFossland/BetBuddy.git/static/js/runtime-main.b77e1945.js",
+    "runtime-main.js.map": "/ToreFossland/BetBuddy.git/static/js/runtime-main.b77e1945.js.map",
+    "static/css/2.ee6ad51d.chunk.css": "/ToreFossland/BetBuddy.git/static/css/2.ee6ad51d.chunk.css",
+    "static/js/2.6ddef408.chunk.js": "/ToreFossland/BetBuddy.git/static/js/2.6ddef408.chunk.js",
+    "static/js/2.6ddef408.chunk.js.map": "/ToreFossland/BetBuddy.git/static/js/2.6ddef408.chunk.js.map",
+    "index.html": "/ToreFossland/BetBuddy.git/index.html",
+    "precache-manifest.e89b451a2d5c7c1a512744e53ce6e278.js": "/ToreFossland/BetBuddy.git/precache-manifest.e89b451a2d5c7c1a512744e53ce6e278.js",
+    "service-worker.js": "/ToreFossland/BetBuddy.git/service-worker.js",
+    "static/css/2.ee6ad51d.chunk.css.map": "/ToreFossland/BetBuddy.git/static/css/2.ee6ad51d.chunk.css.map",
+    "static/js/2.6ddef408.chunk.js.LICENSE.txt": "/ToreFossland/BetBuddy.git/static/js/2.6ddef408.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b77e1945.js",
+    "static/css/2.ee6ad51d.chunk.css",
+    "static/js/2.6ddef408.chunk.js",
+    "static/js/main.bd976e26.chunk.js"
+  ]
+}
