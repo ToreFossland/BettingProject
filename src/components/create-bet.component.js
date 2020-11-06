@@ -41,7 +41,7 @@ export default class CreateBet extends Component{
     }
 
     componentDidMount() {
-        axios.get('http://localhost:5000/users/5f905848654b782acdd5ea85')
+        axios.get('http://localhost:5000/users/5f908e633f6c3f33849fc5dc')
             .then(res => {
                 if (res.data.gnomes.length > 0){
                     this.setState({
@@ -146,7 +146,7 @@ export default class CreateBet extends Component{
         axios.post('http://localhost:5000/bets/add', bet)
         .then(res => console.log(res.data)); 
 
-        //window.location = "/"
+        window.location = "/"
     }
 
     render() {
