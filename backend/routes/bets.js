@@ -8,12 +8,6 @@ router.route('/').get((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/user-bets').get((req, res) => {
-  Bet.find()
-    .then(bets => res.json(bets))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
-
 
 router.route('/add').post((req, res) => {
   const username = req.body.username;
@@ -51,8 +45,8 @@ router.route('/add').post((req, res) => {
   .catch(err => res.status(400).json('Error: ' + err));
 }); 
 
-router.route('/:id').get((req, res) => {
-  Bet.findById(req.params.id)
+router.route('/user-bets').get((req, res) => {
+  Bet.find({username: req.body.username})
     .then(bet => res.json(bet))
     .catch(err => res.status(400).json('Error: ' + err));
 });

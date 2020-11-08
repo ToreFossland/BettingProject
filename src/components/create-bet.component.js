@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"
 import axios from 'axios';
+//import { collection } from "../../backend/models/bet.model";
 
 export default class CreateBet extends Component{
     constructor(props){
@@ -40,9 +41,11 @@ export default class CreateBet extends Component{
         }
     }
 
+    //Usename må settes som til den som logger inn og dermed kan alle gnomes koblet til den brukeren vises
     componentDidMount() {
-        axios.get('http://localhost:5000/users/5f908e633f6c3f33849fc5dc')
+        axios.post('http://127.0.0.1:5000/users/gnomes',  {"username": "Stian"})
             .then(res => {
+                console.log(res)
                 if (res.data.gnomes.length > 0){
                     this.setState({
                         users: res.data.gnomes.map(user => user.username),

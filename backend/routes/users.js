@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { raw } = require('express');
 let User = require('../models/user.model');
 
 router.route('/').get((req, res) => {
@@ -18,27 +19,27 @@ router.route('/add').post((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/update/:id').post((req, res) => {
-  User.findById(req.params.id)
+router.route('/update').post((req, res) => {
+  User.findOne({username: req.body.username})
     .then(user => {
       user.username = req.body.username;
       user.gnomes.push({username:req.body.gnome})
 
       user.save()
-        .then(() => res.json('Exercise updated!'))
+        .then(() => res.json('User updated!'))
         .catch(err => res.status(400).json('Error: ' + err));
     })
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/:id').delete((req, res) => {
-  User.findByIdAndDelete(req.params.id)
-    .then(() => res.json('Exercise deleted.'))
+router.route('/').delete((req, res) => {
+  User.findOneAndDelete({username: req.body.username})
+    .then(() => res.json('User deleted.'))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/:id').get((req, res) => {
-  User.findById(req.params.id)
+router.route('/gnomes').post((req, res) => {
+  User.findOne({username: req.body.username})
     .then(user => res.json(user))
     .catch(err => res.status(400).json('Error: ' + err));
 });
