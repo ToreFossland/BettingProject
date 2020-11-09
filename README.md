@@ -1,3 +1,15 @@
+## How to run
+
+Go to /backend, run:
+
+### `nodemon server`
+
+Open new terminal, go to project(not to /backend), run:
+
+### `npm start`
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
