@@ -43,7 +43,7 @@ export default class CreateBet extends Component{
 
     //Usename må settes som til den som logger inn og dermed kan alle gnomes koblet til den brukeren vises
     componentDidMount() {
-        axios.post('http://127.0.0.1:5000/users/gnomes',  {"username": "Stian"})
+        axios.post('http://127.0.0.1:5000/users/gnomes',  {"username": "Ludvig"})
             .then(res => {
                 console.log(res)
                 if (res.data.gnomes.length > 0){

@@ -23,10 +23,12 @@ connection.once('open', () => {
 const betsRouter = require('./routes/bets');
 const usersRouter = require('./routes/users');
 const bookiesRouter = require('./routes/bookies');
+const walletsRouter = require('./routes/wallets');
 
 app.use('/bets', betsRouter);
 app.use('/users', usersRouter);
 app.use('/bookies', bookiesRouter);
+app.use('/wallets', walletsRouter);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);

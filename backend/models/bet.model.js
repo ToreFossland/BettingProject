@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
+var SchemaTypes = mongoose.Schema.Types;
 
 const betSchema = new Schema({
   username: {type: String, required: true},
