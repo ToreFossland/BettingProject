@@ -4,7 +4,7 @@ Go to /backend, run:
 
 ### `nodemon server`
 
-Open new terminal, go to project(not to /backend), run:
+Open new terminal, go to mern_bet_app, run:
 
 ### `npm start`
 
