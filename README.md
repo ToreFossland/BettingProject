@@ -9,6 +9,14 @@ Open new terminal, go to mern_bet_app, run:
 ### `npm start`
 
 
+## Implementation suggestions
+1. Liste med warnings på forsiden. Feks at du har negativt beløp på en bookie. "Ønsker du å føre inn en innbetaling". Eller at det er et freebet som må tas. Eller et omsetningskrav som går ut.
+2. UI som likner en del på Fiken. Få, store knapper for de viktigste aktivitetene. Kun den viktigste informasjonen på forsiden.
+
+
+## Automatic generated stuff below
+
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
