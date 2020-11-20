@@ -23,6 +23,7 @@ router.route('/add').post((req, res) => {
   const commission = Number(req.body.commission);
   const sport = req.body.sport;
   const freebet = req.body.freebet;
+  const outcome = req.body.outcome;
 
   const newBet= new Bet({
     username,
@@ -38,6 +39,7 @@ router.route('/add').post((req, res) => {
     commission,
     sport,
     freebet,
+    outcome,
   });
 
   newBet.save()
@@ -73,6 +75,7 @@ router.route('/update/:id').post((req, res) => {
       bet.commission = Number(req.body.commission);
       bet.sport = req.body.sport;
       bet.freebet = req.body.freebet;
+      bet.outcome = req.body.outcome;
 
       bet.save()
         .then(() => res.json('Exercise updated!'))

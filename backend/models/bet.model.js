@@ -17,7 +17,7 @@ const betSchema = new Schema({
   commission: {type: Number, required: true},
   sport: {type: String, required: true},
   freebet: {type: String, required: true},
-  
+  outcome: {type: String, required: true}
 }, {
     timestamps: true
 });
