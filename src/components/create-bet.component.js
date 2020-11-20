@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css"
 import axios from 'axios';
 //import { collection } from "../../backend/models/bet.model";
 
+
 export default class CreateBet extends Component{
     constructor(props){
         super(props);
