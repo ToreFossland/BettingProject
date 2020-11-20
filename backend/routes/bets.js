@@ -43,7 +43,7 @@ router.route('/add').post((req, res) => {
   });
 
   newBet.save()
-  .then(() => res.json('Exercise added!'))
+  .then(() => res.json('Bet added!'))
   .catch(err => res.status(400).json('Error: ' + err));
 }); 
 
@@ -55,7 +55,7 @@ router.route('/user-bets').get((req, res) => {
 
 router.route('/:id').delete((req, res) => {
   Bet.findByIdAndDelete(req.params.id)
-    .then(() => res.json('Exercise deleted.'))
+    .then(() => res.json('Bet deleted.'))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
@@ -78,7 +78,7 @@ router.route('/update/:id').post((req, res) => {
       bet.outcome = req.body.outcome;
 
       bet.save()
-        .then(() => res.json('Exercise updated!'))
+        .then(() => res.json('Bet updated!'))
         .catch(err => res.status(400).json('Error: ' + err));
     })
     .catch(err => res.status(400).json('Error: ' + err));
