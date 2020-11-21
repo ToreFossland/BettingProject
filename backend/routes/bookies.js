@@ -29,10 +29,7 @@ router.route('/get-inplay/').get((req, res) =>{
 
 
 router.route('/add').post((req, res) => {
-    const username = req.body.username;
-    const balance = req.body.balance;
-    const inplay   = req.body.inplay;
-    const name    = req.body.name;
+    const {username, balance, inplay, name} = req.body;
     
     const newBookie = new Bookie({
       username,

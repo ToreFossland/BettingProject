@@ -24,7 +24,7 @@ router.route('/add').post((req, res) => {
   const sport = req.body.sport;
   const freebet = req.body.freebet;
   const outcome = req.body.outcome;
-
+  
   const newBet= new Bet({
     username,
     placeDate,
@@ -81,6 +81,15 @@ router.route('/update/:id').post((req, res) => {
         .then(() => res.json('Bet updated!'))
         .catch(err => res.status(400).json('Error: ' + err));
     })
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.route('/bets-month').get((req, res) => {
+  Bet.find({'betDate':{
+        $gte: req.body.start,
+        $lte: req.body.end
+  } })
+    .then(bet => res.json(bet))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
