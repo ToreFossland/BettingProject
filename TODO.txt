@@ -1,0 +1,2 @@
+Legge til sjekker for å se om all data som required er en del av body i en request
+Legge til await på find requester 
