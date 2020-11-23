@@ -1,11 +1,14 @@
 
 const router = require('express').Router();
 let Bet = require('../models/bet.model');
+const auth = require("../middleware/auth");
 
-router.route('/').get((req, res) => {
-  Bet.find()
-    .then(bets => res.json(bets))
-    .catch(err => res.status(400).json('Error: ' + err));
+router.get("/", auth, async (req, res) => {
+  const user = await User.findById(req.user);
+  const bet = await Bet.find({username: user.username})
+  res.json(
+    bet
+  );
 });
 
 
