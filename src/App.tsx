@@ -1,15 +1,21 @@
 import React from 'react';
+import './App.css';
 // import {BrowserRouter as Router, Route} from 'react-router-dom'
 // import Navbar from "./components/navbar.component"
 // import BetList from "./components/bet-list.component"
 // import CreateBet from "./components/create-bet.component"
 // import CreateUser from "./components/create-user.component"
-
+import { flexbox } from '@material-ui/system';
 import { createMuiTheme, ThemeProvider, makeStyles } from '@material-ui/core/styles';
-import {Container, withStyles} from '@material-ui/core';
+import {Box, Container, Grid, withStyles} from '@material-ui/core';
 import {grey, blue, amber} from '@material-ui/core/colors';
 import Background from './soccer.jpg';
-import BetList2 from './components/BetList'
+import BetList2 from './components/BetList';
+import Navbar from './components/Navbar';
+import Chart from './components/Chart';
+import UnsettledBets from './components/UnsettledBets';
+import BetButton from './components/BetButton'
+import SpanningTable from './components/BalanceTable';
 
 /* Global Material UI theme
 This is sent in a provider so that every component can use it. */
@@ -17,10 +23,10 @@ const globalTheme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: amber[400],
+      main: blue[500],
     },
     secondary: {
-      main: blue[500],
+      main: amber[400],
     },
     info: {
       main: grey[500],
@@ -29,17 +35,23 @@ const globalTheme = createMuiTheme({
 });
 
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) =>({
   root: {
     /* Styles for full page image */
-    backgroundImage: `url(${Background})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    height: '100%',
-    minHeight: '100vh',
+    // backgroundImage: `url(${Background})`,
+    // backgroundSize: 'cover',
+    // backgroundPosition: 'center',
+    // backgroundRepeat: 'no-repeat',
+    backgroundColor: "black",
+    height: '100vh',
+    minHeight: '100%',
   },
-});
+  container: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(12, 1fr)',
+    gridGap: theme.spacing(3),
+  },
+}));
 
 
 /* GlobalCss that is used to override Material components */
@@ -63,9 +75,6 @@ const GlobalCss = withStyles({
 })(() => null);
 
 
-
-
-
 function App() {
   const classes = useStyles();
   return (
@@ -82,8 +91,24 @@ function App() {
     <ThemeProvider theme={globalTheme}>
     <GlobalCss />
     <div className={classes.root}>
-      <Container maxWidth="xl">
-        <BetList2 />
+      <Container maxWidth= {false} >
+        <Grid container spacing={0}>
+          <Grid item xs={12}>
+            <Navbar />
+          </Grid>
+          <Grid item xs={6}>
+           <div style = {{backgroundColor: "black", width: 500}}>
+              <Chart />
+            </div>
+          </Grid>
+          <Grid item xs={6}>
+            <Box display = "flex" height = "90vh" flexDirection = "column" justifyContent = "space-between" alignItems = "flex-end">
+              <BetButton />
+              <SpanningTable  />
+              <UnsettledBets />
+            </Box>
+          </Grid>
+        </Grid>
       </Container>
     </div>
   </ThemeProvider>
@@ -91,3 +116,28 @@ function App() {
 }
 
 export default App; 
+
+
+
+
+
+// <Box display = "flex" height = "90vh" flexDirection = "column" justifyContent = "space-between">
+// <div>
+//   <p>
+//     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem sit est quis hic praesentium inventore assumenda odio sapiente, fuga voluptatum.
+//   </p>
+// </div>
+// <div>
+//   <p>
+//     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem sit est quis hic praesentium inventore assumenda odio sapiente, fuga voluptatum.
+//   </p>
+// </div>
+// <div>
+//   <p>
+//     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem sit est quis hic praesentium inventore assumenda odio sapiente, fuga voluptatum.
+//   </p>
+// </div>
+// </Box> 
+
+     {/* <BetList2 />  */}
+  
