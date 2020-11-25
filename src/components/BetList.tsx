@@ -1,30 +1,12 @@
 import React, { useEffect, useState } from "react"
 import axios from 'axios';
-import store from '../redux/store'
+import {RootState} from '../redux/reducers/index';
 
 import { DataGrid, RowsProp, ColDef } from '@material-ui/data-grid';
 
-import {loadBets} from '../redux/actions/betActions';
+import { useSelector } from 'react-redux'
 
-
-
-interface Bet {
-    id: number,
-    username: string,
-    placeDate: Date,
-    betDate: Date,
-    event: string,
-    backOdds: number,
-    layOdds: number,
-    backAmount: number,
-    layAmount: number,
-    bookie: string,
-    exchange: string,
-    commission: number,
-    sport: string,
-    freebet: string,
-    users: string[]
-}
+import {IBet} from '../types/interfaces'
 
 const rows: RowsProp = [
     {
@@ -53,40 +35,44 @@ const columns: ColDef[] = [
 ];
 
 const BetList2 = () => {
-    const [bets, setBets] = useState([] as Bet[]);
+    const [bets, setBets] = useState([] as IBet[]);
+
+    // let betss = useSelector((state : RootState) => state.bet.bets);
+
+    // console.log(betss);
 
     const pageSize = 25;
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await
-                axios.get('http://localhost:5000/bets/')
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const response = await
+    //             axios.get('http://localhost:5000/bets/')
 
-            setBets(response.data.map((bet: any) => {
-                const temp: Bet = {
-                    id: bet._id,
-                    username: bet.username,
-                    placeDate: bet.placeDate,
-                    betDate: bet.betDate,
-                    event: bet.event,
-                    backOdds: bet.backOdds,
-                    layOdds: bet.layOdds,
-                    backAmount: bet.backAmount,
-                    layAmount: bet.layAmount,
-                    bookie: bet.bookie,
-                    exchange: bet.exchange,
-                    commission: bet.commission,
-                    sport: bet.sport,
-                    freebet: bet.freebet,
-                    users: bet.users
-                }
-                return (temp);
+    //         setBets(response.data.map((bet: any) => {
+    //             const temp: Bet = {
+    //                 id: bet._id,
+    //                 username: bet.userId,
+    //                 placeDate: bet.placeDate,
+    //                 betDate: bet.betDate,
+    //                 event: bet.event,
+    //                 backOdds: bet.backOdds,
+    //                 layOdds: bet.layOdds,
+    //                 backAmount: bet.backAmount,
+    //                 layAmount: bet.layAmount,
+    //                 bookie: bet.bookie,
+    //                 exchange: bet.exchange,
+    //                 commission: bet.commission,
+    //                 sport: bet.sport,
+    //                 freebet: bet.freebet,
+    //                 users: bet.users
+    //             }
+    //             return (temp);
 
-            }
-            ))
-        };
-        fetchData();
-    }, [])
+    //         }
+    //         ))
+    //     };
+    //     fetchData();
+    // }, [])
 
     return (
         <div style={{ height: 1000, width: '100%' }}>

@@ -5,9 +5,11 @@ import errorReducer from './errorReducer';
 import userReducer from './userReducer';
 import betReducer from './betReducer';
 
-export default combineReducers({
+export const rootReducer = combineReducers({
   auth: authReducer,
   error: errorReducer,
   user: userReducer,
   bet: betReducer
 });
+
+export type RootState = ReturnType<typeof rootReducer>;

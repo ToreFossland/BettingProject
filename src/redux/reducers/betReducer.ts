@@ -4,18 +4,19 @@ import {
     AUTH_ERROR
   } from '../actions/types';
 
+  import{IBet, IBetActionTypes} from '../../types/interfaces'
+
   const initialState = {
     token: localStorage.getItem('token'),
     isAuthenticated: null,
     isLoading: false,
-    bets: null,
+    bets: [] as IBet[],
   };
 
 
 
-export default function (state = initialState, action: any) {
+export default function (state = initialState, action: any){
     switch (action.type) {
-      case AUTH_ERROR:
       case BETS_LOADING:
         return {
           ...state,

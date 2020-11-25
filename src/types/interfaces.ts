@@ -1,3 +1,5 @@
+import { IconButton } from '@material-ui/core';
+import { BETS_LOADED, BETS_LOADING } from '../redux/actions/types';
 import { E_ERROR } from './enum';
 
 // REACT
@@ -124,3 +126,38 @@ export interface IAction {
   type: string;
   payload?: any;
 }
+
+
+export interface IBet{
+  id: number,
+  userId: string,
+  placeDate: Date,
+  betDate: Date,
+  event: string,
+  backOdds: number,
+  layOdds: number,
+  backAmount: number,
+  layAmount: number,
+  bookie: string,
+  exchange: string,
+  commission: number,
+  sport: string,
+  freebet: string,
+  outcome: string,
+}
+
+
+interface loadingIBetAction{
+  type: typeof BETS_LOADING
+  isLoading: boolean
+}
+
+interface loadedIBetAction{
+  type: typeof BETS_LOADED
+  isAuthenticated: boolean,
+  isLoading: boolean,
+  payload: IBet[]
+}
+
+
+export type IBetActionTypes = loadingIBetAction | loadedIBetAction
