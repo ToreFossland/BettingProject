@@ -6,8 +6,8 @@ import './App.css';
 // import CreateUser from "./components/create-user.component"
 import { flexbox } from '@material-ui/system';
 import { createMuiTheme, ThemeProvider, makeStyles } from '@material-ui/core/styles';
-import {Box, Container, Grid, withStyles, Fab} from '@material-ui/core';
-import {grey, blue, amber} from '@material-ui/core/colors';
+import { Box, Container, Grid, withStyles, Fab } from '@material-ui/core';
+import { grey, blue, amber } from '@material-ui/core/colors';
 import Background from './soccer.jpg';
 import BetList2 from './components/BetList';
 import Navbar from './components/Navbar';
@@ -18,13 +18,18 @@ import SpanningTable from './components/BalanceTable';
 import Login from './components/Login';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
- 
 
 
-import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
+
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import LastActions from './components/LastActions';
 import PromotionList from './components/PromotionList';
 
+
+import { Provider } from 'react-redux';
+import store from './redux/store';
+import { loadUser } from './redux/actions/authActions';
+import RegisterModal from './components/auth/registerModal';
 
 /* Global Material UI theme
 This is sent in a provider so that every component can use it. */
@@ -44,7 +49,7 @@ const globalTheme = createMuiTheme({
 });
 
 
-const useStyles = makeStyles((theme) =>({
+const useStyles = makeStyles((theme) => ({
   root: {
     /* Styles for full page image */
     // backgroundImage: `url(${Background})`,
@@ -69,7 +74,7 @@ const GlobalCss = withStyles({
     '.MuiDataGrid-root': {
       backgroundColor: 'rgba(58, 58, 58, 0.88)',
     },
-    '.MuiIconButton-root, .MuiTypography-root': {color: 'white'},
+    '.MuiIconButton-root, .MuiTypography-root': { color: 'white' },
     '.MuiContainer-root, .MuiContainer-maxWidthLg': {
       marginBottom: 0,
       padding: 0,
@@ -84,42 +89,45 @@ const GlobalCss = withStyles({
   },
 })(() => null);
 
-function Home(){
-  return(
-    <Grid container spacing={5} alignItems = "flex-end" >
-    <Grid item xs={12}>
-      <Navbar />
-    </Grid>
-    <Grid item xs={7}>
-     <div style = {{backgroundColor: "black", width: 1000}}>
-        <Chart />
-      </div>
-    </Grid>
-    <Grid item xs={5}>
-      <Box display = "flex" height = "90vh" flexDirection = "column" justifyContent = "space-between" alignItems = "center">
-        <BetButton />
-        <SpanningTable  />
-        <UnsettledBets />
-        {/* <Fab color="primary" size = "large" aria-label="add">
+function Home() {
+  return (
+    <Grid container spacing={5} alignItems="flex-end" >
+      <Grid item xs={12}>
+        <Navbar />
+      </Grid>
+      <Grid item xs={7}>
+        <div style={{ backgroundColor: "black", width: 1000 }}>
+          <Chart />
+        </div>
+      </Grid>
+      <Grid item xs={5}>
+        <Box display="flex" height="90vh" flexDirection="column" justifyContent="space-between" alignItems="center">
+          <BetButton />
+          <SpanningTable />
+          <UnsettledBets />
+          {/* <Fab color="primary" size = "large" aria-label="add">
         <AddIcon />
         </Fab> */}
-      </Box>
-  </Grid>
-  <Grid item xs = {6}>
-    <LastActions />
-  </Grid>
-  <Grid item xs = {6}>
-    <PromotionList />
+        </Box>
+      </Grid>
+      <Grid item xs={6}>
+        <LastActions />
+      </Grid>
+      <Grid item xs={6}>
+        <PromotionList />
+      </Grid>
+      <Grid item xs={12}>
+        <BetList2 />
+      </Grid>
     </Grid>
-  <Grid item xs = {12}>
-      <BetList2 />
-  </Grid>
-  </Grid>
   )
 }
 
 
 function App() {
+  useEffect(() => {
+    store.dispatch(loadUser());
+  }, []);
   const classes = useStyles();
 
   return (
@@ -134,28 +142,28 @@ function App() {
     // </Router>
     // </div>
     <ThemeProvider theme={globalTheme}>
-    <GlobalCss />
-    <div className={classes.root}>
-      <Container maxWidth= {false} >
-        <Router>
-          <div>          
-            {/* A <Switch> looks through its children <Route>s and
+      <GlobalCss />
+      <div className={classes.root}>
+        <Container maxWidth={false} >
+          <Router>
+            <div>
+              {/* A <Switch> looks through its children <Route>s and
                 renders the first one that matches the current URL. */}
-            <Switch>
-              <Route path="/home">
-                <Home />
-              </Route>
-              <Route path="/">
-                <Navbar />
-                <Login />
-              </Route>
-            </Switch>
-          </div>
-        </Router>
-      </Container>
-    </div>
-  </ThemeProvider>
-);
+              <Switch>
+                <Route path="/home">
+                  <Home />
+                </Route>
+                <Route path="/">
+                  <Navbar />
+                  <Login />
+                </Route>
+              </Switch>
+            </div>
+          </Router>
+        </Container>
+      </div>
+    </ThemeProvider>
+  );
 }
 
 export default App; 
