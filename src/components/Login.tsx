@@ -10,12 +10,18 @@ import { TextField } from '@material-ui/core';
 import Background from '../soccer.jpg';
 
 
-const image = 
+const images = [
   {
     url: '../soccer.jpg',
     title: 'Log In',
-    width: '100%',
+    width: '50%',
+  },
+  {
+    url: '../soccer.jpg',
+    title: 'Register',
+    width: '50%',
   }
+  ]
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -102,20 +108,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LoginComp() {
+export default function Login() {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [openLogin, setOpenLogin] = React.useState(false);
+  const [openRegister, setOpenRegister] = React.useState(false);
 
-  const handleOpen = () => {
-    setOpen(true);
+  const handleOpen = (title: string) => {
+    if(title === 'Log In'){
+      setOpenLogin(true);
+    }else if(title === 'Register'){
+      setOpenRegister(true);
+    }
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleClose = (title: string) => {
+      setOpenLogin(false);
+      setOpenRegister(false);
   };
 
   return (
     <div className={classes.root}>
+      {images.map((image : any) => (
         <ButtonBase
           focusRipple
           key={image.title}
@@ -124,7 +137,7 @@ export default function LoginComp() {
           style={{
             width: image.width,
           }}
-          onClick = {handleOpen}
+          onClick = {() => handleOpen(image.title)}
         >
           <span
             className={classes.imageSrc}
@@ -145,12 +158,12 @@ export default function LoginComp() {
             </Typography>
           </span>
         </ButtonBase>
-
+      ))}
         <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={classes.modal}
-        open={open}
+        open={openLogin}
         onClose={handleClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
@@ -158,9 +171,37 @@ export default function LoginComp() {
           timeout: 500,
         }}
       >
-        <Fade in={open}>
+        <Fade in={openLogin}>
         <form className={classes.paper} noValidate autoComplete="off">
             <TextField id="standard-basic" label="Username" />
+            <TextField id="standard-basic" label="Password" />
+
+           <Link to="/home">
+                <button type="button">
+                    Click Me!
+                </button>
+            </Link>
+        </form>
+        </Fade>
+      </Modal>
+      
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={openRegister}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={openRegister}>
+        <form className={classes.paper} noValidate autoComplete="off">
+            <TextField id="standard-basic" label="Username" />
+            <TextField id="standard-basic" label="Email" />
+            <TextField id="standard-basic" label="Password" />
             <TextField id="standard-basic" label="Password" />
 
            <Link to="/home">
