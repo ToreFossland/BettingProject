@@ -6,23 +6,24 @@ import './App.css';
 // import CreateUser from "./components/create-user.component"
 import { flexbox } from '@material-ui/system';
 import { createMuiTheme, ThemeProvider, makeStyles } from '@material-ui/core/styles';
-import {Box, Container, Grid, withStyles} from '@material-ui/core';
+import {Box, Container, Grid, withStyles, Fab} from '@material-ui/core';
 import {grey, blue, amber} from '@material-ui/core/colors';
 import Background from './soccer.jpg';
 import BetList2 from './components/BetList';
 import Navbar from './components/Navbar';
-// import Chart from './components/Chart';
+import Chart from './components/Chart';
 import UnsettledBets from './components/UnsettledBets';
 import BetButton from './components/BetButton'
 import SpanningTable from './components/BalanceTable';
-import Test from './components/test';
-import LoginComp from './components/Login';
+import Login from './components/Login';
 import Button from '@material-ui/core/Button';
-import Login2 from './components/Login2';
+import AddIcon from '@material-ui/icons/Add';
  
 
 
 import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
+import LastActions from './components/LastActions';
+import PromotionList from './components/PromotionList';
 
 
 /* Global Material UI theme
@@ -31,7 +32,7 @@ const globalTheme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: blue[500],
+      main: blue[800],
     },
     secondary: {
       main: amber[400],
@@ -51,7 +52,7 @@ const useStyles = makeStyles((theme) =>({
     // backgroundPosition: 'center',
     // backgroundRepeat: 'no-repeat',
     backgroundColor: "black",
-    height: '100vh',
+    height: '250vh',
     minHeight: '100%',
   },
   container: {
@@ -83,47 +84,40 @@ const GlobalCss = withStyles({
   },
 })(() => null);
 
-
-
-
-
 function Home(){
   return(
-    <Grid container spacing={0} alignItems = "flex-end">
+    <Grid container spacing={5} alignItems = "flex-end" >
     <Grid item xs={12}>
       <Navbar />
     </Grid>
-    <Grid item xs={6}>
+    <Grid item xs={7}>
      <div style = {{backgroundColor: "black", width: 1000}}>
-        {/* <Chart /> */}
-        <Test />
+        <Chart />
       </div>
     </Grid>
-    <Grid item xs={6}>
-      <Box display = "flex" height = "90vh" flexDirection = "column" justifyContent = "space-between" alignItems = "flex-end">
+    <Grid item xs={5}>
+      <Box display = "flex" height = "90vh" flexDirection = "column" justifyContent = "space-between" alignItems = "center">
         <BetButton />
         <SpanningTable  />
         <UnsettledBets />
+        {/* <Fab color="primary" size = "large" aria-label="add">
+        <AddIcon />
+        </Fab> */}
       </Box>
+  </Grid>
+  <Grid item xs = {6}>
+    <LastActions />
+  </Grid>
+  <Grid item xs = {6}>
+    <PromotionList />
+    </Grid>
+  <Grid item xs = {12}>
+      <BetList2 />
   </Grid>
   </Grid>
   )
 }
 
-function Login(){
-  return(
-    <Box>
-       <Navbar />
-       {/* <LoginComp /> */}
-       {/* <Link to="/home">
-     <button type="button">
-          Click Me!
-     </button>
-     </Link> */}
-    <Login2 />
-    </Box>
-  )
-}
 
 function App() {
   const classes = useStyles();
@@ -153,7 +147,7 @@ function App() {
               </Route>
               <Route path="/">
                 <Navbar />
-                <LoginComp />
+                <Login />
               </Route>
             </Switch>
           </div>

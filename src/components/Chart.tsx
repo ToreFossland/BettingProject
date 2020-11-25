@@ -64,7 +64,7 @@ const data = [
     },
   ];
 
-export default function Test() {
+export default function Chart() {
   const classes = useStyles();
 
   return (
