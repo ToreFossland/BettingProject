@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-// import {BrowserRouter as Router, Route} from 'react-router-dom'
 // import Navbar from "./components/navbar.component"
 // import BetList from "./components/bet-list.component"
 // import CreateBet from "./components/create-bet.component"
@@ -12,10 +11,19 @@ import {grey, blue, amber} from '@material-ui/core/colors';
 import Background from './soccer.jpg';
 import BetList2 from './components/BetList';
 import Navbar from './components/Navbar';
-import Chart from './components/Chart';
+// import Chart from './components/Chart';
 import UnsettledBets from './components/UnsettledBets';
 import BetButton from './components/BetButton'
 import SpanningTable from './components/BalanceTable';
+import Test from './components/test';
+import LoginComp from './components/Login';
+import Button from '@material-ui/core/Button';
+import Login2 from './components/Login2';
+ 
+
+
+import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
+
 
 /* Global Material UI theme
 This is sent in a provider so that every component can use it. */
@@ -63,6 +71,7 @@ const GlobalCss = withStyles({
     '.MuiIconButton-root, .MuiTypography-root': {color: 'white'},
     '.MuiContainer-root, .MuiContainer-maxWidthLg': {
       marginBottom: 0,
+      padding: 0,
     },
     /* Maxwidth to prevent max-container to getting too large */
     '.MuiContainer-maxWidthXl': {
@@ -75,8 +84,50 @@ const GlobalCss = withStyles({
 })(() => null);
 
 
+
+
+
+function Home(){
+  return(
+    <Grid container spacing={0} alignItems = "flex-end">
+    <Grid item xs={12}>
+      <Navbar />
+    </Grid>
+    <Grid item xs={6}>
+     <div style = {{backgroundColor: "black", width: 1000}}>
+        {/* <Chart /> */}
+        <Test />
+      </div>
+    </Grid>
+    <Grid item xs={6}>
+      <Box display = "flex" height = "90vh" flexDirection = "column" justifyContent = "space-between" alignItems = "flex-end">
+        <BetButton />
+        <SpanningTable  />
+        <UnsettledBets />
+      </Box>
+  </Grid>
+  </Grid>
+  )
+}
+
+function Login(){
+  return(
+    <Box>
+       <Navbar />
+       {/* <LoginComp /> */}
+       {/* <Link to="/home">
+     <button type="button">
+          Click Me!
+     </button>
+     </Link> */}
+    <Login2 />
+    </Box>
+  )
+}
+
 function App() {
   const classes = useStyles();
+
   return (
     // <div className="container">
     //   <Router>
@@ -92,23 +143,21 @@ function App() {
     <GlobalCss />
     <div className={classes.root}>
       <Container maxWidth= {false} >
-        <Grid container spacing={0}>
-          <Grid item xs={12}>
-            <Navbar />
-          </Grid>
-          <Grid item xs={6}>
-           <div style = {{backgroundColor: "black", width: 500}}>
-              <Chart />
-            </div>
-          </Grid>
-          <Grid item xs={6}>
-            <Box display = "flex" height = "90vh" flexDirection = "column" justifyContent = "space-between" alignItems = "flex-end">
-              <BetButton />
-              <SpanningTable  />
-              <UnsettledBets />
-            </Box>
-          </Grid>
-        </Grid>
+        <Router>
+          <div>          
+            {/* A <Switch> looks through its children <Route>s and
+                renders the first one that matches the current URL. */}
+            <Switch>
+              <Route path="/home">
+                <Home />
+              </Route>
+              <Route path="/">
+                <Navbar />
+                <LoginComp />
+              </Route>
+            </Switch>
+          </div>
+        </Router>
       </Container>
     </div>
   </ThemeProvider>
@@ -116,28 +165,3 @@ function App() {
 }
 
 export default App; 
-
-
-
-
-
-// <Box display = "flex" height = "90vh" flexDirection = "column" justifyContent = "space-between">
-// <div>
-//   <p>
-//     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem sit est quis hic praesentium inventore assumenda odio sapiente, fuga voluptatum.
-//   </p>
-// </div>
-// <div>
-//   <p>
-//     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem sit est quis hic praesentium inventore assumenda odio sapiente, fuga voluptatum.
-//   </p>
-// </div>
-// <div>
-//   <p>
-//     Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem sit est quis hic praesentium inventore assumenda odio sapiente, fuga voluptatum.
-//   </p>
-// </div>
-// </Box> 
-
-     {/* <BetList2 />  */}
-  
