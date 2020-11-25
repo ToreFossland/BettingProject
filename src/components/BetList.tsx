@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react"
 import axios from 'axios';
+import store from '../redux/store'
 
 import { DataGrid, RowsProp, ColDef } from '@material-ui/data-grid';
 
 interface Bet {
     id: number,
-    username : string,
+    username: string,
     placeDate: Date,
     betDate: Date,
     event: string,
@@ -22,12 +23,14 @@ interface Bet {
 }
 
 const rows: RowsProp = [
-    { id: 1, username: 'Hello', placeDate: new Date(), BetDate: new Date(), event: "", backOdds: 0, layOdds: 0, backAmount: 0, layAmount: 0, bookie: "",
-     exchange: "", commision:0, sport: "", freebet: "", users: []},
+    {
+        id: 1, username: 'Hello', placeDate: new Date(), BetDate: new Date(), event: "", backOdds: 0, layOdds: 0, backAmount: 0, layAmount: 0, bookie: "",
+        exchange: "", commision: 0, sport: "", freebet: "", users: []
+    },
 
-  ];
-  
-  
+];
+
+
 const columns: ColDef[] = [
     { field: 'username', headerName: 'Username', width: 100 },
     { field: 'placeDate', headerName: 'Place Date', width: 150 },
@@ -53,12 +56,12 @@ const BetList2 = () => {
     useEffect(() => {
         const fetchData = async () => {
             const response = await
-            axios.get('http://localhost:5000/bets/')
+                axios.get('http://localhost:5000/bets/')
 
-            setBets(response.data.map((bet : any) => {
-                const temp : Bet = {
+            setBets(response.data.map((bet: any) => {
+                const temp: Bet = {
                     id: bet._id,
-                    username : bet.username,
+                    username: bet.username,
                     placeDate: bet.placeDate,
                     betDate: bet.betDate,
                     event: bet.event,
@@ -72,18 +75,19 @@ const BetList2 = () => {
                     sport: bet.sport,
                     freebet: bet.freebet,
                     users: bet.users
-                }  
-                return(temp);
+                }
+                return (temp);
 
             }
-        ))};
+            ))
+        };
         fetchData();
     }, [])
 
-    return(
+    return (
         <div style={{ height: 1000, width: '100%' }}>
-        <DataGrid rows={bets} columns={columns} />
-      </div>
+            <DataGrid rows={bets} columns={columns} />
+        </div>
     )
 }
 

@@ -1,19 +1,25 @@
 
 const router = require('express').Router();
 let Bet = require('../models/bet.model');
+let User = require('../models/user.model')
 const auth = require("../middleware/auth");
 
 router.get("/", auth, async (req, res) => {
-  const user = await User.findById(req.user);
-  const bet = await Bet.find({username: user.username})
+  const bet = await Bet.find({ userId: req.user })
   res.json(
     bet
   );
 });
 
 
-router.route('/add').post((req, res) => {
-  const username = req.body.username;
+router.post("/add", async (req, res) => {
+  const existingUser = await User.findById(req.body.userId);
+  if (!existingUser) {
+    return res
+      .status(401)
+      .json({ msg: "Cannor find user with id, authorization denied" });
+  }
+  const userId = req.body.userId;
   const placeDate = Date.parse(req.body.placeDate);
   const betDate = Date.parse(req.body.betDate);
   const event = req.body.event;
@@ -27,9 +33,9 @@ router.route('/add').post((req, res) => {
   const sport = req.body.sport;
   const freebet = req.body.freebet;
   const outcome = req.body.outcome;
-  
-  const newBet= new Bet({
-    username,
+
+  const newBet = new Bet({
+    userId,
     placeDate,
     betDate,
     event,
@@ -46,12 +52,12 @@ router.route('/add').post((req, res) => {
   });
 
   newBet.save()
-  .then(() => res.json('Bet added!'))
-  .catch(err => res.status(400).json('Error: ' + err));
-}); 
+    .then(() => res.json('Bet added!'))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
 
 router.route('/user-bets').get((req, res) => {
-  Bet.find({username: req.body.username})
+  Bet.find({ username: req.body.username })
     .then(bet => res.json(bet))
     .catch(err => res.status(400).json('Error: ' + err));
 });
@@ -88,10 +94,12 @@ router.route('/update/:id').post((req, res) => {
 });
 
 router.route('/bets-month').get((req, res) => {
-  Bet.find({'betDate':{
-        $gte: req.body.start,
-        $lte: req.body.end
-  } })
+  Bet.find({
+    'betDate': {
+      $gte: req.body.start,
+      $lte: req.body.end
+    }
+  })
     .then(bet => res.json(bet))
     .catch(err => res.status(400).json('Error: ' + err));
 });
