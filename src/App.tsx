@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 // import {BrowserRouter as Router, Route} from 'react-router-dom'
 // import Navbar from "./components/navbar.component"
@@ -7,8 +7,8 @@ import './App.css';
 // import CreateUser from "./components/create-user.component"
 import { flexbox } from '@material-ui/system';
 import { createMuiTheme, ThemeProvider, makeStyles } from '@material-ui/core/styles';
-import {Box, Container, Grid, withStyles} from '@material-ui/core';
-import {grey, blue, amber} from '@material-ui/core/colors';
+import { Box, Container, Grid, withStyles } from '@material-ui/core';
+import { grey, blue, amber } from '@material-ui/core/colors';
 import Background from './soccer.jpg';
 import BetList2 from './components/BetList';
 import Navbar from './components/Navbar';
@@ -16,6 +16,11 @@ import Chart from './components/Chart';
 import UnsettledBets from './components/UnsettledBets';
 import BetButton from './components/BetButton'
 import SpanningTable from './components/BalanceTable';
+
+import { Provider } from 'react-redux';
+import store from './redux/store';
+import { loadUser } from './redux/actions/authActions';
+import RegisterModal from './components/auth/registerModal';
 
 /* Global Material UI theme
 This is sent in a provider so that every component can use it. */
@@ -35,14 +40,14 @@ const globalTheme = createMuiTheme({
 });
 
 
-const useStyles = makeStyles((theme) =>({
+const useStyles = makeStyles((theme) => ({
   root: {
     /* Styles for full page image */
     // backgroundImage: `url(${Background})`,
     // backgroundSize: 'cover',
     // backgroundPosition: 'center',
     // backgroundRepeat: 'no-repeat',
-    backgroundColor: "black",
+    //backgroundColor: "black",
     height: '100vh',
     minHeight: '100%',
   },
@@ -60,7 +65,7 @@ const GlobalCss = withStyles({
     '.MuiDataGrid-root': {
       backgroundColor: 'rgba(58, 58, 58, 0.88)',
     },
-    '.MuiIconButton-root, .MuiTypography-root': {color: 'white'},
+    '.MuiIconButton-root, .MuiTypography-root': { color: 'white' },
     '.MuiContainer-root, .MuiContainer-maxWidthLg': {
       marginBottom: 0,
     },
@@ -76,7 +81,11 @@ const GlobalCss = withStyles({
 
 
 function App() {
+  useEffect(() => {
+    store.dispatch(loadUser());
+  }, []);
   const classes = useStyles();
+
   return (
     // <div className="container">
     //   <Router>
@@ -89,33 +98,36 @@ function App() {
     // </Router>
     // </div>
     <ThemeProvider theme={globalTheme}>
-    <GlobalCss />
-    <div className={classes.root}>
-      <Container maxWidth= {false} >
-        <Grid container spacing={0}>
-          <Grid item xs={12}>
-            <Navbar />
-          </Grid>
-          <Grid item xs={6}>
-           <div style = {{backgroundColor: "black", width: 500}}>
+      <GlobalCss />
+      <Provider store={store}>
+        <div className={classes.root}>
+          <Container maxWidth={false} >
+            <Grid container spacing={0}>
+              <Grid item xs={12}>
+                <Navbar />
+              </Grid>
+              <Grid item xs={6}>
+                {/* <div style = {{backgroundColor: "black", width: 500}}>
               <Chart />
-            </div>
-          </Grid>
-          <Grid item xs={6}>
-            <Box display = "flex" height = "90vh" flexDirection = "column" justifyContent = "space-between" alignItems = "flex-end">
-              <BetButton />
-              <SpanningTable  />
-              <UnsettledBets />
-            </Box>
-          </Grid>
-        </Grid>
-      </Container>
-    </div>
-  </ThemeProvider>
-);
+            </div> */}
+                <RegisterModal />
+              </Grid>
+              <Grid item xs={6}>
+                <Box display="flex" height="90vh" flexDirection="column" justifyContent="space-between" alignItems="flex-end">
+                  <BetButton />
+                  <SpanningTable />
+                  <UnsettledBets />
+                </Box>
+              </Grid>
+            </Grid>
+          </Container>
+        </div>
+      </Provider>
+    </ThemeProvider>
+  );
 }
 
-export default App; 
+export default App;
 
 
 
@@ -139,5 +151,4 @@ export default App;
 // </div>
 // </Box> 
 
-     {/* <BetList2 />  */}
-  
+{/* <BetList2 />  */ }

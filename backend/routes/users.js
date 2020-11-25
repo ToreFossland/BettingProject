@@ -5,10 +5,15 @@ const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 const User = require("../models/user.model");
 
+/**
+ * @route   POST users/register
+ * @desc    Register new user
+ * @access  Public
+ */
 
 router.post("/register", async (req, res) => {
   try {
-    let { email, username, password, passwordCheck} = req.body;
+    let { email, username, password, passwordCheck } = req.body;
 
     // validate
     if (!email || !password || !passwordCheck || !username)
@@ -43,11 +48,29 @@ router.post("/register", async (req, res) => {
       password: passwordHash,
     });
     const savedUser = await newUser.save();
-    res.json(savedUser);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    if (!savedUser) throw Error('Something went wrong saving the user');
+    const token = jwt.sign({ id: savedUser._id }, process.env.JWT_TOKEN, {
+      expiresIn: 3600
+    });
+
+    res.status(200).json({
+      token,
+      user: {
+        id: savedUser.id,
+        name: savedUser.name,
+        email: savedUser.email
+      }
+    });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
   }
 });
+
+/**
+ * @route   POST users/login
+ * @desc    Login user
+ * @access  Public
+ */
 
 router.post("/login", async (req, res) => {
   try {
@@ -58,23 +81,23 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ msg: "Not all fields have been entered." });
 
     const userEmail = await User.findOne({ username: user });
-    const username = await User.findOne({email: user})
+    const username = await User.findOne({ email: user })
 
-    if (!userEmail){
-      if (!username){
+    if (!userEmail) {
+      if (!username) {
         return res
           .status(400)
           .json({ msg: "No account with this username has been registered." });
       }
       user = username
     }
-    else{
+    else {
       user = userEmail
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ msg: "Invalid credentials." });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_TOKEN);
+    const token = jwt.sign({ id: user._id }, process.env.JWT_TOKEN, { expiresIn: 3600 });
     res.json({
       token,
       user: {
@@ -87,6 +110,11 @@ router.post("/login", async (req, res) => {
   }
 });
 
+/**
+ * @route   DELETE users/
+ * @desc    Delete A Item
+ * @access  Private
+ */
 router.delete("/delete", auth, async (req, res) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.user);
@@ -96,6 +124,11 @@ router.delete("/delete", auth, async (req, res) => {
   }
 });
 
+/**
+ * @route   POST users/tokenIsValid
+ * @desc    Check if token is valid
+ * @access  Private
+ */
 router.post("/tokenIsValid", async (req, res) => {
   try {
     const token = req.header("x-auth-token");
@@ -112,6 +145,11 @@ router.post("/tokenIsValid", async (req, res) => {
   }
 });
 
+/**
+ * @route   GET users/
+ * @desc    Get user data
+ * @access  Private
+ */
 router.get("/", auth, async (req, res) => {
   const user = await User.findById(req.user);
   res.json({
