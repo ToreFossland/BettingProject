@@ -95,7 +95,7 @@ export default function Chart() {
             </BarChart>
         </Box> */}
         <LineChart
-        width={1000}
+        width= {window.innerWidth/2}
         height={700}
         data={data}
         margin={{

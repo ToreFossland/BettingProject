@@ -10,10 +10,10 @@ import { TextField } from '@material-ui/core';
 import Background from '../../soccer.jpg';
 
 import { connect } from 'react-redux';
-import { login, register } from '../../redux/actions/authActions';
-import { clearErrors } from '../../redux/actions/errorActions';
-import { ILoginModal, ITarget, IAuthReduxProps, IRegisterModal } from '../../types/interfaces';
-import { useHistory } from "react-router-dom";
+import { login, register } from '../redux/actions/authActions';
+import { clearErrors } from '../redux/actions/errorActions';
+import { ILoginModal, ITarget, IAuthReduxProps } from '../types/interfaces';
+
 
 const images = [
   {
@@ -113,79 +113,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LoginModal = ({
-  isAuthenticated,
-  error,
-  login,
-  register,
-  clearErrors
-}: ILoginModal) => {
+export default function Login() {
   const classes = useStyles();
+  const [openLogin, setOpenLogin] = React.useState(false);
+  const [openRegister, setOpenRegister] = React.useState(false);
 
-  const [openLogin, setOpenLogin] = useState(false);
-  const [openRegister, setOpenRegister] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordCheck, setPasswordCheck] = useState('');
-  const [username, setUsername] = useState('');
-  const [msg, setMsg] = useState(null);
-
-  let history = useHistory();
-
-  const handleOpen = useCallback((title: string) => {
-    clearErrors();
+  const handleOpen = (title: string) => {
     if (title === 'Log In') {
       setOpenLogin(true);
-      console.log(openLogin)
     } else if (title === 'Register') {
       setOpenRegister(true);
-      console.log(openRegister)
-    }
-  }, [clearErrors, openLogin, openRegister]);
-
-  const handleClose = useCallback(() => {
-    clearErrors();
-    setOpenLogin(false);
-    setOpenRegister(false);
-  }, [clearErrors, openLogin, openRegister]);
-
-  const handleChangeEmail = (e: ITarget) => setEmail(e.target.value);
-  const handleChangePassword = (e: ITarget) => setPassword(e.target.value);
-  const handleChangeUsername = (e: ITarget) => setUsername(e.target.value);
-  const handleChangePasswordCheck = (e: ITarget) => setPasswordCheck(e.target.value);
-
-
-  const handleOnSubmit = (e: any) => {
-    e.preventDefault();
-    if (passwordCheck == '') {
-      // Attempt to login
-      console.log("login")
-      const user = { email, password };
-      login(user);
-    }
-    else {
-      //Atemt to register user
-      const user = { email, username, password, passwordCheck };
-      register(user);
     }
   };
 
-  useEffect(() => {
-    // Check for register error
-    if (error.id === 'LOGIN_FAIL') {
-      setMsg(error.msg.msg);
-    } else {
-      setMsg(null);
-    }
-
-    // If authenticated, close modal
-    if (openLogin || openRegister) {
-      if (isAuthenticated) {
-        handleClose();
-        history.push("/home")
-      }
-    }
-  }, [error, handleClose, isAuthenticated, openLogin, openRegister]);
+  const handleClose = (title: string) => {
+    setOpenLogin(false);
+    setOpenRegister(false);
+  };
 
   return (
     <div className={classes.root}>
@@ -234,14 +178,14 @@ const LoginModal = ({
       >
         <Fade in={openLogin}>
           <form className={classes.paper} noValidate autoComplete="off">
-            <TextField id="standard-basic" label="Email" onChange={handleChangeEmail} />
-            <TextField id="standard-basic" label="Password" type="password" onChange={handleChangePassword} />
+            <TextField id="standard-basic" label="Username" />
+            <TextField id="standard-basic" label="Password" />
 
-
-            <button type="button" onClick={handleOnSubmit}>
-              Click Me!
+            <Link to="/home">
+              <button type="button">
+                Click Me!
                 </button>
-
+            </Link>
           </form>
         </Fade>
       </Modal>
@@ -260,23 +204,19 @@ const LoginModal = ({
       >
         <Fade in={openRegister}>
           <form className={classes.paper} noValidate autoComplete="off">
-            <TextField id="standard-basic" label="Username" onChange={handleChangeUsername} />
-            <TextField id="standard-basic" label="Email" onChange={handleChangeEmail} />
-            <TextField id="standard-basic" label="Password" type="password" onChange={handleChangePassword} />
-            <TextField id="standard-basic" label="Verify password" type="password" onChange={handleChangePasswordCheck} />
-            <button type="button" onClick={handleOnSubmit}>
-              Click Me!
+            <TextField id="standard-basic" label="Username" />
+            <TextField id="standard-basic" label="Email" />
+            <TextField id="standard-basic" label="Password" />
+            <TextField id="standard-basic" label="Password" />
+
+            <Link to="/home">
+              <button type="button">
+                Click Me!
                 </button>
+            </Link>
           </form>
         </Fade>
       </Modal>
     </div>
   );
 }
-
-const mapStateToProps = (state: IAuthReduxProps) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  error: state.error
-});
-
-export default connect(mapStateToProps, { login, register, clearErrors })(LoginModal);

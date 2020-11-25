@@ -14,10 +14,17 @@ export interface IMsg {
 }
 
 // AUTH
-export interface IUser {
+export interface ILoginUser {
   name?: string;
   email: string;
   password: string;
+}
+
+export interface IRegisterUser {
+  username?: string;
+  email: string;
+  password: string;
+  passwordCheck: string;
 }
 
 export interface IAuthForm {
@@ -27,11 +34,12 @@ export interface IAuthForm {
 }
 
 export interface ILoginModal extends IAuthForm {
-  login(user: IUser): void;
+  login(user: ILoginUser): void;
+  register(user: IRegisterUser): void;
 }
 
 export interface IRegisterModal extends IAuthForm {
-  register(user: IUser): void;
+  register(user: IRegisterUser): void;
 }
 
 export interface ILogoutProps {
@@ -58,7 +66,7 @@ export interface IConfigHeaders {
 export interface IAppNavbar {
   auth?: {
     isAuthenticated: boolean;
-    user: IUser;
+    user: ILoginUser;
   };
 }
 

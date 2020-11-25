@@ -31,6 +31,7 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import { loadUser } from './redux/actions/authActions';
 import RegisterModal from './components/auth/registerModal';
+import Home from "./components/Home";
 
 /* Global Material UI theme
 This is sent in a provider so that every component can use it. */
@@ -89,40 +90,6 @@ const GlobalCss = withStyles({
     },
   },
 })(() => null);
-
-function Home() {
-  return (
-    <Grid container spacing={5} alignItems="flex-end" >
-      <Grid item xs={12}>
-        <Navbar />
-      </Grid>
-      <Grid item xs={7}>
-        <div style={{ backgroundColor: "black", width: 1000 }}>
-          <Chart />
-        </div>
-      </Grid>
-      <Grid item xs={5}>
-        <Box display="flex" height="90vh" flexDirection="column" justifyContent="space-between" alignItems="center">
-          <BetButton />
-          <SpanningTable />
-          <UnsettledBets />
-          {/* <Fab color="primary" size = "large" aria-label="add">
-        <AddIcon />
-        </Fab> */}
-        </Box>
-      </Grid>
-      <Grid item xs={6}>
-        <LastActions />
-      </Grid>
-      <Grid item xs={6}>
-        <PromotionList />
-      </Grid>
-      <Grid item xs={12}>
-        <BetList2 />
-      </Grid>
-    </Grid>
-  )
-}
 
 
 function App() {
