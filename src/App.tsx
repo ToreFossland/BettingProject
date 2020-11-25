@@ -19,9 +19,6 @@ import Login from './components/auth/Login';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import LoginModal from "./components/auth/Login"
-
-
-
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import LastActions from './components/LastActions';
 import PromotionList from './components/PromotionList';
@@ -30,6 +27,7 @@ import PromotionList from './components/PromotionList';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import { loadUser } from './redux/actions/authActions';
+import { loadBets } from './redux/actions/betActions';
 import RegisterModal from './components/auth/registerModal';
 import Home from "./components/Home";
 
@@ -95,6 +93,7 @@ const GlobalCss = withStyles({
 function App() {
   useEffect(() => {
     store.dispatch(loadUser());
+    store.dispatch(loadBets());
   }, []);
   const classes = useStyles();
 

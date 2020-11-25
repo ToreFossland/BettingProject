@@ -279,4 +279,6 @@ const mapStateToProps = (state: IAuthReduxProps) => ({
   error: state.error
 });
 
-export default connect(mapStateToProps, { login, register, clearErrors })(LoginModal);
+const mapDispatchToProps = { login, register, clearErrors }
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginModal);

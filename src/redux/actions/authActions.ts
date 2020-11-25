@@ -123,3 +123,4 @@ export const tokenConfig = (getState: Function) => {
 
   return config;
 };
+

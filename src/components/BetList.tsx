@@ -3,6 +3,10 @@ import axios from 'axios';
 
 import { DataGrid, RowsProp, ColDef } from '@material-ui/data-grid';
 
+import {loadBets} from '../redux/actions/betActions';
+import store from '../redux/store';
+
+
 interface Bet {
     id: number,
     username : string,
