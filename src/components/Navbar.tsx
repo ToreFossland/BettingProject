@@ -14,6 +14,9 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import { ILogoutProps } from '../types/interfaces';
+import { logout } from '../redux/actions/authActions';
+import { connect } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -79,7 +82,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Navbar() {
+
+const Navbar = ({ logout }: ILogoutProps) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -87,7 +91,7 @@ export default function Navbar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const handleProfileMenuOpen = (event : any) => {
+  const handleProfileMenuOpen = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -100,9 +104,14 @@ export default function Navbar() {
     handleMobileMenuClose();
   };
 
-  const handleMobileMenuOpen = (event : any) => {
+  const handleMobileMenuOpen = (event: any) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+  const handleLogOut = () => {
+    logout();
+    window.location.reload(false);
+  }
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -116,7 +125,7 @@ export default function Navbar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Account</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+      <MenuItem onClick={handleLogOut}>Logout</MenuItem>
     </Menu>
   );
 
@@ -230,3 +239,5 @@ export default function Navbar() {
     </div>
   );
 }
+
+export default connect(null, { logout })(Navbar);
