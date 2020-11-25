@@ -15,9 +15,10 @@ import Chart from './components/Chart';
 import UnsettledBets from './components/UnsettledBets';
 import BetButton from './components/BetButton'
 import SpanningTable from './components/BalanceTable';
-import Login from './components/Login';
+import Login from './components/auth/Login';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import LoginModal from "./components/auth/Login"
 
 
 
@@ -143,25 +144,27 @@ function App() {
     // </div>
     <ThemeProvider theme={globalTheme}>
       <GlobalCss />
-      <div className={classes.root}>
-        <Container maxWidth={false} >
-          <Router>
-            <div>
-              {/* A <Switch> looks through its children <Route>s and
+      <Provider store={store}>
+        <div className={classes.root}>
+          <Container maxWidth={false} >
+            <Router>
+              <div>
+                {/* A <Switch> looks through its children <Route>s and
                 renders the first one that matches the current URL. */}
-              <Switch>
-                <Route path="/home">
-                  <Home />
-                </Route>
-                <Route path="/">
-                  <Navbar />
-                  <Login />
-                </Route>
-              </Switch>
-            </div>
-          </Router>
-        </Container>
-      </div>
+                <Switch>
+                  <Route path="/home">
+                    <Home />
+                  </Route>
+                  <Route path="/">
+                    <Navbar />
+                    <LoginModal />
+                  </Route>
+                </Switch>
+              </div>
+            </Router>
+          </Container>
+        </div>
+      </Provider>
     </ThemeProvider>
   );
 }

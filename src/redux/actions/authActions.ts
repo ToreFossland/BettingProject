@@ -77,7 +77,7 @@ export const login = ({ email, password }: IAuthFunction) => (
   };
 
   // Request body
-  const body = JSON.stringify({ email, password });
+  const body = JSON.stringify({ user: email, password });
 
   axios
     .post('http://localhost:5000/users/login', body, config)
