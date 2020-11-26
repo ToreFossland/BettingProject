@@ -1,3 +1,5 @@
+import { IconButton } from '@material-ui/core';
+import { BETS_LOADED, BETS_LOADING } from '../redux/actions/types';
 import { E_ERROR } from './enum';
 
 // REACT
