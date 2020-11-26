@@ -124,3 +124,53 @@ export interface IAction {
   type: string;
   payload?: any;
 }
+
+export interface IExistingBet {
+  _id: string;
+  userId: String;
+  placeDate: Date;
+  betDate: Date;
+  event: String;
+  backOdds: Number;
+  layOdds: Number;
+  backAmount: Number;
+  layAmount: Number;
+  bookie: String;
+  exchange: String
+  commission: Number;
+  sport: String
+  freebet: String;
+  outcome: String;
+}
+
+export interface IBet {
+  _id?: String;
+  userId: String;
+  placeDate: Date;
+  betDate: Date;
+  event: String;
+  backOdds: Number;
+  layOdds: Number;
+  backAmount: Number;
+  layAmount: Number;
+  bookie: String;
+  exchange: String
+  commission: Number;
+  sport: String
+  freebet: String;
+  outcome: String;
+}
+
+export interface IBetList {
+  bet: {
+    bets: IExistingBet[]
+  };
+  loadBets(): void;
+  isAuthenticated: boolean;
+}
+
+export interface IBetReduxProps extends IAuthReduxProps {
+  bet: {
+    bets: IExistingBet[];
+  };
+}

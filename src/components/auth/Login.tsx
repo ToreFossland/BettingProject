@@ -2,17 +2,16 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import ButtonBase from '@material-ui/core/ButtonBase';
 import Typography from '@material-ui/core/Typography';
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-import { TextField } from '@material-ui/core';
+import { TextField, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
 import Background from '../../soccer.jpg';
 
 import { connect } from 'react-redux';
 import { login, register } from '../../redux/actions/authActions';
 import { clearErrors } from '../../redux/actions/errorActions';
-import { ILoginModal, ITarget, IAuthReduxProps, IRegisterModal } from '../../types/interfaces';
+import { ILoginModal, ITarget, IAuthReduxProps } from '../../types/interfaces';
 import { useHistory } from "react-router-dom";
 
 const images = [
@@ -129,17 +128,20 @@ const LoginModal = ({
   const [passwordCheck, setPasswordCheck] = useState('');
   const [username, setUsername] = useState('');
   const [msg, setMsg] = useState(null);
+  const [alertOpen, setAlertOpen] = useState(false);
 
   let history = useHistory();
+
+  const handleAlertClose = () => {
+    setAlertOpen(false);
+  };
 
   const handleOpen = useCallback((title: string) => {
     clearErrors();
     if (title === 'Log In') {
       setOpenLogin(true);
-      console.log(openLogin)
     } else if (title === 'Register') {
       setOpenRegister(true);
-      console.log(openRegister)
     }
   }, [clearErrors, openLogin, openRegister]);
 
@@ -157,9 +159,8 @@ const LoginModal = ({
 
   const handleOnSubmit = (e: any) => {
     e.preventDefault();
-    if (passwordCheck == '') {
+    if (passwordCheck === '') {
       // Attempt to login
-      console.log("login")
       const user = { email, password };
       login(user);
     }
@@ -172,12 +173,12 @@ const LoginModal = ({
 
   useEffect(() => {
     // Check for register error
-    if (error.id === 'LOGIN_FAIL') {
+    if (error.id === 'LOGIN_FAIL' || error.id === 'REGISTER_FAIL') {
       setMsg(error.msg.msg);
+      setAlertOpen(true)
     } else {
       setMsg(null);
     }
-
     // If authenticated, close modal
     if (openLogin || openRegister) {
       if (isAuthenticated) {
@@ -239,7 +240,7 @@ const LoginModal = ({
 
 
             <button type="button" onClick={handleOnSubmit}>
-              Click Me!
+              Login
                 </button>
 
           </form>
@@ -265,11 +266,29 @@ const LoginModal = ({
             <TextField id="standard-basic" label="Password" type="password" onChange={handleChangePassword} />
             <TextField id="standard-basic" label="Verify password" type="password" onChange={handleChangePasswordCheck} />
             <button type="button" onClick={handleOnSubmit}>
-              Click Me!
-                </button>
+              Register
+              </button>
           </form>
         </Fade>
       </Modal>
+      <Dialog
+        open={alertOpen}
+        onClose={handleAlertClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"You have redcived an error!"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {msg}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAlertClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

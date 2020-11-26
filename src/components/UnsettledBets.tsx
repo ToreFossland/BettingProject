@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import axios from 'axios';
 
 import { DataGrid, RowsProp, ColDef } from '@material-ui/data-grid';
 
 interface Bet {
     id: number,
-    username : string,
+    username: string,
     placeDate: Date,
     betDate: Date,
     event: string,
@@ -22,11 +22,11 @@ interface Bet {
 }
 
 const rows: RowsProp = [
-    { id: 1, BetDate: new Date(), event: "", outcome: "", backAmount: 0, information: ""}
+    { id: 1, BetDate: new Date(), event: "", outcome: "", backAmount: 0, information: "" }
 
-  ];
-  
-  
+];
+
+
 const columns: ColDef[] = [
     { field: 'betDate', headerName: 'Bet Date', width: 150 },
     { field: 'event', headerName: 'Event', width: 100 },
@@ -40,7 +40,7 @@ const UnsettledBets = () => {
 
     const pageSize = 4;
 
-    useEffect(() => {
+    /* useEffect(() => {
         const fetchData = async () => {
             const response = await
             axios.get('http://localhost:5000/bets/')
@@ -68,12 +68,12 @@ const UnsettledBets = () => {
             }
         ))};
         fetchData();
-    }, [])
+    }, []) */
 
-    return(
+    return (
         <div style={{ height: 320, width: 600 }}>
-        <DataGrid rows={bets} columns={columns} pageSize = {pageSize} />
-      </div>
+            <DataGrid rows={bets} columns={columns} pageSize={pageSize} />
+        </div>
     )
 }
 

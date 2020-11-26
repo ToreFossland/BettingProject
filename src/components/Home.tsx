@@ -1,24 +1,14 @@
-import React, { useEffect, useState } from 'react';
-// import Navbar from "./components/navbar.component"
-// import BetList from "./components/bet-list.component"
-// import CreateBet from "./components/create-bet.component"
-// import CreateUser from "./components/create-user.component"
-import { flexbox } from '@material-ui/system';
-import { createMuiTheme, ThemeProvider, makeStyles } from '@material-ui/core/styles';
-import { Box, Container, Grid, withStyles, Fab } from '@material-ui/core';
-import { grey, blue, amber } from '@material-ui/core/colors';
-import Background from './soccer.jpg';
+import React from 'react';
+import { Box, Grid } from '@material-ui/core';
 import Navbar from './Navbar';
 import Chart from './Chart';
 import UnsettledBets from './UnsettledBets';
 import BetButton from './BetButton'
 import SpanningTable from './BalanceTable';
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import LastActions from './LastActions';
 import PromotionList from './PromotionList';
-import BetList2 from './BetList';
+import BetList from './BetList';
 import WithAuth from "./WithAuth";
-
 
 function Home() {
     return (
@@ -48,7 +38,7 @@ function Home() {
                 <PromotionList />
             </Grid>
             <Grid item xs={12}>
-                <BetList2 />
+                <BetList />
             </Grid>
         </Grid>
     )

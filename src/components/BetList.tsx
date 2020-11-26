@@ -1,42 +1,19 @@
-import React, { useEffect, useState } from "react"
-import axios from 'axios';
-import store from '../redux/store'
-
+import React, { useEffect } from "react"
+import { connect } from 'react-redux';
+import { loadBets } from '../redux/actions/betActions';
 import { DataGrid, RowsProp, ColDef } from '@material-ui/data-grid';
-
-import {loadBets} from '../redux/actions/betActions';
-
-
-
-interface Bet {
-    id: number,
-    username: string,
-    placeDate: Date,
-    betDate: Date,
-    event: string,
-    backOdds: number,
-    layOdds: number,
-    backAmount: number,
-    layAmount: number,
-    bookie: string,
-    exchange: string,
-    commission: number,
-    sport: string,
-    freebet: string,
-    users: string[]
-}
+import { IBetList, IBetReduxProps } from "../types/interfaces"
 
 const rows: RowsProp = [
     {
-        id: 1, username: 'Hello', placeDate: new Date(), BetDate: new Date(), event: "", backOdds: 0, layOdds: 0, backAmount: 0, layAmount: 0, bookie: "",
-        exchange: "", commision: 0, sport: "", freebet: "", users: []
+        id: "", placeDate: new Date(), BetDate: new Date(), event: "", backOdds: 0, layOdds: 0, backAmount: 0, layAmount: 0, bookie: "",
+        exchange: "", commision: 0, sport: "", freebet: "", outcome: ""
     },
 
 ];
 
 
 const columns: ColDef[] = [
-    { field: 'username', headerName: 'Username', width: 100 },
     { field: 'placeDate', headerName: 'Place Date', width: 150 },
     { field: 'betDate', headerName: 'Bet Date', width: 150 },
     { field: 'event', headerName: 'Event', width: 100 },
@@ -49,50 +26,35 @@ const columns: ColDef[] = [
     { field: 'comission', headerName: 'Comission', width: 100 },
     { field: 'sport', headerName: 'Sport', width: 100 },
     { field: 'freebet', headerName: 'Freebet?', width: 100 },
-    { field: 'users', headerName: 'Users', width: 100 },
+    { field: 'outcome', headerName: 'Outcome', width: 100 },
 ];
 
-const BetList2 = () => {
-    const [bets, setBets] = useState([] as Bet[]);
 
-    const pageSize = 25;
-
+const BetList = ({
+    loadBets,
+    bet,
+    isAuthenticated,
+}: IBetList) => {
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await
-                axios.get('http://localhost:5000/bets/')
-
-            setBets(response.data.map((bet: any) => {
-                const temp: Bet = {
-                    id: bet._id,
-                    username: bet.username,
-                    placeDate: bet.placeDate,
-                    betDate: bet.betDate,
-                    event: bet.event,
-                    backOdds: bet.backOdds,
-                    layOdds: bet.layOdds,
-                    backAmount: bet.backAmount,
-                    layAmount: bet.layAmount,
-                    bookie: bet.bookie,
-                    exchange: bet.exchange,
-                    commission: bet.commission,
-                    sport: bet.sport,
-                    freebet: bet.freebet,
-                    users: bet.users
-                }
-                return (temp);
-
-            }
-            ))
-        };
-        fetchData();
-    }, [])
-
+        loadBets();
+    }, [loadBets]);
+    const { bets } = bet;
     return (
         <div style={{ height: 1000, width: '100%' }}>
-            <DataGrid rows={bets} columns={columns} />
+            {bets ?
+                <DataGrid rows={bets.map((bet, index) => ({
+                    id: index, placeDate: bet.placeDate, betDate: bet.betDate, event: bet.event, backOdds: bet.backOdds, layOdds: bet.layOdds, backAmount: bet.backAmount, layAmount: bet.layAmount, bookie: bet.bookie,
+                    exchange: bet.exchange, commission: bet.commission, sport: bet.sport, freebet: bet.freebet, outcome: bet.outcome
+                }
+                ))} columns={columns} />
+                : null}
         </div>
     )
-}
+};
 
-export default BetList2;
+const mapStateToProps = (state: IBetReduxProps) => ({
+    bet: state.bet,
+    isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, { loadBets })(BetList);

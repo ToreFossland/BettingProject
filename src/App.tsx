@@ -1,35 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-// import Navbar from "./components/navbar.component"
-// import BetList from "./components/bet-list.component"
-// import CreateBet from "./components/create-bet.component"
-// import CreateUser from "./components/create-user.component"
-import { flexbox } from '@material-ui/system';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { createMuiTheme, ThemeProvider, makeStyles } from '@material-ui/core/styles';
 import { Box, Container, Grid, withStyles, Fab } from '@material-ui/core';
 import { grey, blue, amber } from '@material-ui/core/colors';
-import Background from './soccer.jpg';
-import BetList2 from './components/BetList';
 import Navbar from './components/Navbar';
-import Chart from './components/Chart';
-import UnsettledBets from './components/UnsettledBets';
-import BetButton from './components/BetButton'
-import SpanningTable from './components/BalanceTable';
-import Login from './components/auth/Login';
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
 import LoginModal from "./components/auth/Login"
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
-import LastActions from './components/LastActions';
-import PromotionList from './components/PromotionList';
 
 
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import { loadUser } from './redux/actions/authActions';
-import { loadBets } from './redux/actions/betActions';
-import RegisterModal from './components/auth/registerModal';
 import Home from "./components/Home";
+import { loadBets } from './redux/actions/betActions';
 
 /* Global Material UI theme
 This is sent in a provider so that every component can use it. */
@@ -93,15 +77,15 @@ const GlobalCss = withStyles({
 function App() {
   useEffect(() => {
     store.dispatch(loadUser());
-    store.dispatch(loadBets());
   }, []);
+
   const classes = useStyles();
 
   return (
     // <div className="container">
     //   <Router>
     //   <Navbar/>
-    //   <BetList2 />
+    //   <BetList />
     //   <br/>
     //   <Route path="/" exact component={BetList}/>
     //   <Route path="/create" component={CreateBet}/>
