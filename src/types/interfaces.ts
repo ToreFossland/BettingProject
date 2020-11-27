@@ -176,3 +176,23 @@ export interface IBetReduxProps extends IAuthReduxProps {
     bets: IExistingBet[];
   };
 }
+
+export interface IExistingBookie {
+  _id: string;
+  userId: String,
+  balance: Number,
+  inplay: Number
+}
+
+export interface IBankList {
+  bank: {
+    bookies: IExistingBookie[]
+  };
+  loadBookies(): void;
+}
+
+export interface IBankReduxProps extends IAuthReduxProps {
+  bank: {
+    bookies: IExistingBookie[];
+  };
+}

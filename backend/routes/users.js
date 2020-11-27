@@ -46,6 +46,7 @@ router.post("/register", async (req, res) => {
       email,
       username,
       password: passwordHash,
+      gnomes: []
     });
     const savedUser = await newUser.save();
     if (!savedUser) throw Error('Something went wrong saving the user');
@@ -155,7 +156,24 @@ router.get("/", auth, async (req, res) => {
   res.json({
     username: user.username,
     id: user._id,
+    gnomes: user.gnomes
   });
 });
+
+
+router.post("/add-gnome", async (req, res) => {
+  await User.findById(req.body.id)
+    .then(user => {
+      const gnomeId = req.body.id + req.body.gnomeName;
+      const gnome = { name: req.body.gnomeName, gnomeId: gnomeId };
+
+      user.gnomes.push(gnome)
+
+      user.save()
+        .then((user) => res.json(user))
+        .catch((err) => res.status(400).json({ msg: err }))
+    })
+
+})
 
 module.exports = router;

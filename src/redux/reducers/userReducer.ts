@@ -15,9 +15,10 @@ const initialState = {
 
 export default function (state = initialState, action: any) {
     switch (action.types) {
-        case LOGIN_SUCCESS:
+        case USER_LOADED:
             return {
-                ...state
+                ...state,
+                user: action.payload
             }
         default:
             return state;

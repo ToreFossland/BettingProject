@@ -5,6 +5,7 @@ var SchemaTypes = mongoose.Schema.Types;
 
 const betSchema = new Schema({
   userId: { type: String, required: true },
+  gnomeId: { type: String, required: true },
   placeDate: { type: Date, required: true },
   betDate: { type: Date, required: true },
   event: { type: String, required: true },

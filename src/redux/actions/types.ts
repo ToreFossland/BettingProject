@@ -14,3 +14,6 @@ export const GET_ERRORS = 'GET_ERRORS';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const BETS_LOADING = "BETS_LOADING";
 export const BETS_LOADED = "BETS_LOADED";
+
+export const BOOKIE_LOADING = "BOOKIE_LOADING";
+export const BOOKIE_LOADED = "BOOKIE_LOADED";

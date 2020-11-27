@@ -3,11 +3,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const bookieSchema = new Schema({
-    username: {type: String, required: true},
-    name: {type: String, required: true},
-    balance: {type: Number, required: true},
-    inplay: {type: Number, required: true}
-  
+    userId: { type: String, required: true },
+    gnomeId: { type: String },
+    name: { type: String, required: true },
+    balance: { type: Number },
+    inplay: { type: Number }
+
 }, {
     timestamps: true
 });

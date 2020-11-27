@@ -15,6 +15,8 @@ import { loadUser } from './redux/actions/authActions';
 import Home from "./components/Home";
 import { loadBets } from './redux/actions/betActions';
 
+
+
 /* Global Material UI theme
 This is sent in a provider so that every component can use it. */
 const globalTheme = createMuiTheme({
@@ -106,7 +108,6 @@ function App() {
                     <Home />
                   </Route>
                   <Route path="/">
-                    <Navbar />
                     <LoginModal />
                   </Route>
                 </Switch>

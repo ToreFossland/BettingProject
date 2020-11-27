@@ -11,15 +11,22 @@ router.get("/", auth, async (req, res) => {
   );
 });
 
+router.get("/gnome-bets", auth, async (req, res) => {
+  const bet = await Bet.find({ userId: req.user, gnomeId: req.body.gnomeId })
+  res.json(
+    bet
+  )
+})
 
-router.post("/add", async (req, res) => {
-  const existingUser = await User.findById(req.body.userId);
+router.post("/add", auth, async (req, res) => {
+  const existingUser = await User.findById(req.user);
   if (!existingUser) {
     return res
       .status(401)
-      .json({ msg: "Cannor find user with id, authorization denied" });
+      .json({ msg: "Cannot find user with id, authorization denied" });
   }
   const userId = req.body.userId;
+  const gnomeId = req.body.gnomeId;
   const placeDate = Date.parse(req.body.placeDate);
   const betDate = Date.parse(req.body.betDate);
   const event = req.body.event;
@@ -36,6 +43,7 @@ router.post("/add", async (req, res) => {
 
   const newBet = new Bet({
     userId,
+    gnomeId,
     placeDate,
     betDate,
     event,
@@ -56,12 +64,6 @@ router.post("/add", async (req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/user-bets').get((req, res) => {
-  Bet.find({ username: req.body.username })
-    .then(bet => res.json(bet))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
-
 router.route('/:id').delete((req, res) => {
   Bet.findByIdAndDelete(req.params.id)
     .then(() => res.json('Bet deleted.'))
@@ -71,7 +73,7 @@ router.route('/:id').delete((req, res) => {
 router.route('/update/:id').post((req, res) => {
   Bet.findById(req.params.id)
     .then(bet => {
-      bet.username = req.body.username;
+      bet.userId = req.body.username;
       bet.placeDate = Date.parse(req.body.placeDate);
       bet.betDate = Date.parse(req.body.betDate);
       bet.event = req.body.event;

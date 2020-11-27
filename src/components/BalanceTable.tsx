@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,8 +8,20 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
+import { DataGrid, RowsProp, ColDef } from '@material-ui/data-grid';
+import { loadBookies } from '../redux/actions/bankActions';
+import { IBankList, IBankReduxProps, IExistingBet, IExistingBookie } from "../types/interfaces"
+import { connect } from 'react-redux';
+
 const TAX_RATE = 0.07;
 
+/* const rows: RowsProp = [
+  {
+    id: "",
+  },
+
+];
+ */
 const useStyles = makeStyles({
   table: {
     minWidth: 600,
@@ -30,24 +42,37 @@ function createRow(desc: any, qty: any, unit: any) {
 }
 
 function subtotal(items: any) {
-  return items.map(({ price } : any) => price).reduce((sum: any, i: any) => sum + i, 0);
+  return items.map(({ price }: any) => price).reduce((sum: any, i: any) => sum + i, 0);
 }
 
-const rows = [
-  createRow('Bookies', 100, 1.15),
-  createRow('Exchanges', 10, 45.99),
-  createRow('E-Wallets', 2, 17.99),
-];
 
-const invoiceSubtotal = subtotal(rows);
-const invoiceTaxes = TAX_RATE * invoiceSubtotal;
-const invoiceTotal = invoiceTaxes + invoiceSubtotal;
 
-export default function SpanningTable() {
+const SpanningTable = ({
+  loadBookies,
+  bank,
+}: IBankList) => {
+  useEffect(() => {
+    loadBookies();
+  }, [loadBookies])
   const classes = useStyles();
 
+  const { bookies } = bank;
+  var totBookieBalance = 0;
+  if (bookies) {
+    totBookieBalance = bookies.map(el => el.balance).reduce((a, b) => a.valueOf() + b.valueOf(), 0).valueOf()
+  }
+  const rows = [
+    createRow('Bookies', totBookieBalance, 1.15),
+    createRow('Exchanges', 10, 45.99),
+    createRow('E-Wallets', 2, 17.99),
+  ];
+
+  const invoiceSubtotal = subtotal(rows);
+  const invoiceTaxes = TAX_RATE * invoiceSubtotal;
+  const invoiceTotal = invoiceTaxes + invoiceSubtotal;
+
   return (
-    <TableContainer style = {{width: 600, height: 400}} component={Paper}>
+    <TableContainer style={{ width: 600, height: 400 }} component={Paper}>
       <Table className={classes.table} aria-label="spanning table">
         <TableHead>
           <TableRow>
@@ -85,3 +110,10 @@ export default function SpanningTable() {
     </TableContainer>
   );
 }
+
+const mapStateToProps = (state: IBankReduxProps) => ({
+  bank: state.bank,
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, { loadBookies })(SpanningTable);
