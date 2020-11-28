@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const walletSchema = new Schema({
-    username: {type: String, required: true},
-    name: {type: String, required: true},
-    balance: {type: Number, required: true},
+    userId: { type: String, required: true },
+    name: { type: String, required: true },
+    balance: { type: Number, required: true },
 }, {
     timestamps: true
 });

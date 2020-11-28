@@ -7,7 +7,7 @@ import {
 const initialState = {
   token: localStorage.getItem('token'),
   isLoading: false,
-  bets: null,
+  bets: [],
 };
 
 

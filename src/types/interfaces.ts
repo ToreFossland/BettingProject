@@ -180,19 +180,41 @@ export interface IBetReduxProps extends IAuthReduxProps {
 export interface IExistingBookie {
   _id: string;
   userId: String,
+  name: String,
+  balance: Number,
+  inplay: Number
+}
+
+export interface IExistingWallet {
+  _id: string;
+  userId: String,
+  name: Number
+  balance: Number,
+}
+
+export interface IExistingExchange {
+  _id: string;
+  userId: String,
+  name: Number
   balance: Number,
   inplay: Number
 }
 
 export interface IBankList {
   bank: {
-    bookies: IExistingBookie[]
+    bookies: IExistingBookie[],
+    wallets: IExistingWallet[],
+    exchanges: IExistingExchange[]
   };
   loadBookies(): void;
+  loadExchanges(): void;
+  loadWallets(): void;
 }
 
 export interface IBankReduxProps extends IAuthReduxProps {
   bank: {
     bookies: IExistingBookie[];
+    wallets: IExistingWallet[];
+    exchanges: IExistingExchange[];
   };
 }

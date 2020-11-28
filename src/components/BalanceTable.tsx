@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
 import { DataGrid, RowsProp, ColDef } from '@material-ui/data-grid';
-import { loadBookies } from '../redux/actions/bankActions';
+import { loadBookies, loadExchanges, loadWallets } from '../redux/actions/bankActions';
 import { IBankList, IBankReduxProps, IExistingBet, IExistingBookie } from "../types/interfaces"
 import { connect } from 'react-redux';
 
@@ -46,25 +46,29 @@ function subtotal(items: any) {
 }
 
 
-
 const SpanningTable = ({
   loadBookies,
+  loadExchanges,
+  loadWallets,
   bank,
 }: IBankList) => {
   useEffect(() => {
     loadBookies();
-  }, [loadBookies])
+    loadExchanges();
+    loadWallets();
+  }, [loadBookies, loadExchanges, loadWallets])
   const classes = useStyles();
 
   const { bookies } = bank;
-  var totBookieBalance = 0;
-  if (bookies) {
-    totBookieBalance = bookies.map(el => el.balance).reduce((a, b) => a.valueOf() + b.valueOf(), 0).valueOf()
-  }
+  const { wallets } = bank;
+  const { exchanges } = bank;
+  const totBookieBalance = bookies.map(el => el.balance).reduce((a, b) => a.valueOf() + b.valueOf(), 0).valueOf()
+  const totExchangeBalance = exchanges.map(el => el.balance).reduce((a, b) => a.valueOf() + b.valueOf(), 0).valueOf()
+  const totWalletBalance = wallets.map(el => el.balance).reduce((a, b) => a.valueOf() + b.valueOf(), 0).valueOf()
   const rows = [
     createRow('Bookies', totBookieBalance, 1.15),
-    createRow('Exchanges', 10, 45.99),
-    createRow('E-Wallets', 2, 17.99),
+    createRow('Exchanges', totExchangeBalance, 45.99),
+    createRow('E-Wallets', totWalletBalance, 17.99),
   ];
 
   const invoiceSubtotal = subtotal(rows);
@@ -116,4 +120,4 @@ const mapStateToProps = (state: IBankReduxProps) => ({
   isAuthenticated: state.auth.isAuthenticated
 });
 
-export default connect(mapStateToProps, { loadBookies })(SpanningTable);
+export default connect(mapStateToProps, { loadBookies, loadExchanges, loadWallets })(SpanningTable);

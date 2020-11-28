@@ -14,26 +14,25 @@ router.get("/gnome-bookies", auth, async (req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/').delete((req, res) => {
-  Bookie.findOneAndDelete({ username: req.body.username, name: req.body.name })
+router.delete("/", auth, async (req, res) => {
+  await Bookie.findOneAndDelete({ username: req.body.username, name: req.body.name })
     .then(() => res.json('Bookie deleted.'))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/get-balance').get((req, res) => {
-  Bookie.findOne({ username: req.body.username })
+router.get("/get-balance", auth, async (req, res) => {
+  await Bookie.findOne({ gnomeId: req.body.gnomeId })
     .then(bookie => res.json(bookie.balance))
     .catch(err => res.status(400).json('Error: ' + err));
 }
 )
 
-router.route('/get-inplay/').get((req, res) => {
-  Bookie.findOne({ username: req.body.username })
+router.get("/get-inplay/", auth, async (req, res) => {
+  await Bookie.findOne({ gnomeId: req.body.gnomeId })
     .then(bookie => res.json(bookie.inplay))
     .catch(err => res.status(400).json('Error: ' + err));
 }
 )
-
 
 router.post("/add", auth, (req, res) => {
   const { userId, gnomeId, name, balance } = req.body;
@@ -64,26 +63,35 @@ router.post("/add", auth, (req, res) => {
 
 });
 
-//If taking money out the req.body.balance must be negative
-router.route('/update-balance').post((req, res) => {
-  Bookie.findOne({ username: req.body.username, name: req.body.name })
-    .then(bookie => {
-      bookie.balance = bookie.balance + req.body.balance
 
+router.route('/update-balance').post((req, res) => {
+  Bookie.findOne({ gnomeId: req.body.gnomeId, name: req.body.name })
+    .then(bookie => {
+      if (req.body.deposit) {
+        bookie.balance = bookie.balance + req.body.balance
+      }
+      else {
+        bookie.balance = bookie.balance - req.body.balance
+      }
       bookie.save()
-        .then(() => res.json('Bookie updated!'))
+        .then(() => res.json('Bookie balance updated!'))
         .catch(err => res.status(400).json('Error: ' + err));
     })
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+
 router.route('/update-inplay/').post((req, res) => {
   Bookie.findOne({ username: req.body.username, name: req.body.name })
     .then(bookie => {
-      bookie.inplay = bookie.inplay + req.body.inplay
-
+      if (req.body.settled) {
+        bookie.inplay = bookie.inplay - req.body.inplay
+      }
+      else {
+        bookie.inplay = bookie.inplay + req.body.inplay
+      }
       bookie.save()
-        .then(() => res.json('Bookie updated!'))
+        .then(() => res.json('Bookie inplay updated!'))
         .catch(err => res.status(400).json('Error: ' + err));
     })
     .catch(err => res.status(400).json('Error: ' + err));
