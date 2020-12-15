@@ -10,8 +10,9 @@ import Paper from '@material-ui/core/Paper';
 
 import { DataGrid, RowsProp, ColDef } from '@material-ui/data-grid';
 import { loadBookies, loadExchanges, loadWallets } from '../redux/actions/bankActions';
-import { IBankList, IBankReduxProps, IExistingBet, IExistingBookie } from "../types/interfaces"
-import { connect } from 'react-redux';
+import { IBankList, IBankReduxProps, IExistingBookie, IExistingExchange, IExistingWallet } from "../types/interfaces"
+import { connect, useSelector } from 'react-redux';
+import { RootState } from "../redux/reducers"
 
 const TAX_RATE = 0.07;
 
@@ -46,27 +47,20 @@ function subtotal(items: any) {
 }
 
 
-const SpanningTable = ({
-  loadBookies,
-  loadExchanges,
-  loadWallets,
-  bank,
-}: IBankList) => {
-  useEffect(() => {
-    loadBookies();
-    loadExchanges();
-    loadWallets();
-  }, [loadBookies, loadExchanges, loadWallets])
+const SpanningTable = () => {
+
   const classes = useStyles();
 
-  const { bookies } = bank;
-  const { wallets } = bank;
-  const { exchanges } = bank;
-  const totBookieBalance = bookies.map(el => el.balance).reduce((a, b) => a.valueOf() + b.valueOf(), 0).valueOf()
-  const totExchangeBalance = exchanges.map(el => el.balance).reduce((a, b) => a.valueOf() + b.valueOf(), 0).valueOf()
-  const totWalletBalance = wallets.map(el => el.balance).reduce((a, b) => a.valueOf() + b.valueOf(), 0).valueOf()
+  const { bookies } = useSelector((state: RootState) => state.bank);
+  const { wallets } = useSelector((state: RootState) => state.bank);;
+  const { exchanges } = useSelector((state: RootState) => state.bank);
+
+  const totBookieBalance = bookies.map((el: IExistingBookie) => el.balance).reduce((a: number, b: number) => a.valueOf() + b.valueOf(), 0).valueOf()
+  const totExchangeBalance = exchanges.map((el: IExistingExchange) => el.balance).reduce((a: number, b: number) => a.valueOf() + b.valueOf(), 0).valueOf()
+  const totWalletBalance = wallets.map((el: IExistingWallet) => el.balance).reduce((a: number, b: number) => a.valueOf() + b.valueOf(), 0).valueOf()
+
   const rows = [
-    createRow('Bookies', totBookieBalance, 1.15),
+    createRow('Bookies', totBookieBalance, 1.15), 
     createRow('Exchanges', totExchangeBalance, 45.99),
     createRow('E-Wallets', totWalletBalance, 17.99),
   ];
@@ -116,8 +110,8 @@ const SpanningTable = ({
 }
 
 const mapStateToProps = (state: IBankReduxProps) => ({
-  bank: state.bank,
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
+  bank: state.bank
 });
 
 export default connect(mapStateToProps, { loadBookies, loadExchanges, loadWallets })(SpanningTable);

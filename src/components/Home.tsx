@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Grid } from '@material-ui/core';
 import Navbar from './Navbar';
 import Chart from './Chart';
@@ -9,8 +9,19 @@ import LastActions from './LastActions';
 import PromotionList from './PromotionList';
 import BetList from './BetList';
 import WithAuth from "./WithAuth";
+import { loadBookies, loadExchanges, loadWallets } from '../redux/actions/bankActions';
+import { loadBets } from "../redux/actions/betActions"
+import store from '../redux/store';
+
+
 
 function Home() {
+    useEffect(() => {
+        store.dispatch(loadBookies());
+        store.dispatch(loadExchanges());
+        store.dispatch(loadWallets());
+        store.dispatch(loadBets());
+    }, []);
     return (
         <Grid container spacing={5} alignItems="flex-end" >
             <Grid item xs={12}>

@@ -1,8 +1,9 @@
 import React, { useEffect } from "react"
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { loadBets } from '../redux/actions/betActions';
 import { DataGrid, RowsProp, ColDef } from '@material-ui/data-grid';
-import { IBetList, IBetReduxProps } from "../types/interfaces"
+import { IBetList, IBetReduxProps, IExistingBet } from "../types/interfaces"
+import { RootState } from "../redux/reducers"
 
 const rows: RowsProp = [
     {
@@ -30,19 +31,14 @@ const columns: ColDef[] = [
 ];
 
 
-const BetList = ({
-    loadBets,
-    bet,
-    isAuthenticated,
-}: IBetList) => {
-    useEffect(() => {
-        loadBets();
-    }, [loadBets]);
-    const { bets } = bet;
+const BetList = () => {
+    const { bets } = useSelector((state: RootState) => state.bet)
+
+    //const { bets } = bet;
     return (
         <div style={{ height: 1000, width: '100%' }}>
             {bets ?
-                <DataGrid rows={bets.map((bet, index) => ({
+                <DataGrid rows={bets.map((bet: IExistingBet, index: number) => ({
                     id: index, placeDate: bet.placeDate, betDate: bet.betDate, event: bet.event, backOdds: bet.backOdds, layOdds: bet.layOdds, backAmount: bet.backAmount, layAmount: bet.layAmount, bookie: bet.bookie,
                     exchange: bet.exchange, commission: bet.commission, sport: bet.sport, freebet: bet.freebet, outcome: bet.outcome
                 }

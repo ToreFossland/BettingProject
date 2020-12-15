@@ -14,6 +14,7 @@ import store from './redux/store';
 import { loadUser } from './redux/actions/authActions';
 import Home from "./components/Home";
 import { loadBets } from './redux/actions/betActions';
+import { loadBookies, loadExchanges, loadWallets } from './redux/actions/bankActions';
 
 
 
@@ -84,16 +85,6 @@ function App() {
   const classes = useStyles();
 
   return (
-    // <div className="container">
-    //   <Router>
-    //   <Navbar/>
-    //   <BetList />
-    //   <br/>
-    //   <Route path="/" exact component={BetList}/>
-    //   <Route path="/create" component={CreateBet}/>
-    //   <Route path="/user" component={CreateUser}/>
-    // </Router>
-    // </div>
     <ThemeProvider theme={globalTheme}>
       <GlobalCss />
       <Provider store={store}>

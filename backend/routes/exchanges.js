@@ -15,14 +15,14 @@ router.get("/gnome-exchanges", auth, async (req, res) => {
 });
 
 router.get("/get-balance", auth, async (req, res) => {
-    await Bookie.findOne({ gnomeId: req.body.gnomeId })
+    await Exchange.findOne({ gnomeId: req.body.gnomeId, name: req.body.name })
         .then(exchange => res.json(exchange.balance))
         .catch(err => res.status(400).json('Error: ' + err));
 }
 )
 
 router.get("/get-inplay/", auth, async (req, res) => {
-    await Exchange.findOne({ gnomeId: req.body.gnomeId })
+    await Exchange.findOne({ gnomeId: req.body.gnomeId, name: req.body.name })
         .then(exchange => res.json(exchange.inplay))
         .catch(err => res.status(400).json('Error: ' + err));
 }

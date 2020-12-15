@@ -6,7 +6,7 @@ import {
   BETS_LOADING,
   AUTH_ERROR
 } from './types';
-import { IConfigHeaders } from '../../types/interfaces';
+import { IConfigHeaders, IBetList } from '../../types/interfaces';
 import { tokenConfig } from "./authActions"
 
 // Check token & load user
@@ -29,4 +29,6 @@ export const loadBets = () => (dispatch: Function, getState: Function) => {
       });
     });
 };
+
+
 

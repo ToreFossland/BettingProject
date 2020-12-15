@@ -164,9 +164,6 @@ export interface IBet {
 }
 
 export interface IBetList {
-  bet: {
-    bets: IExistingBet[]
-  };
   loadBets(): void;
   isAuthenticated: boolean;
 }
@@ -201,11 +198,6 @@ export interface IExistingExchange {
 }
 
 export interface IBankList {
-  bank: {
-    bookies: IExistingBookie[],
-    wallets: IExistingWallet[],
-    exchanges: IExistingExchange[]
-  };
   loadBookies(): void;
   loadExchanges(): void;
   loadWallets(): void;
@@ -218,3 +210,6 @@ export interface IBankReduxProps extends IAuthReduxProps {
     exchanges: IExistingExchange[];
   };
 }
+
+
+
