@@ -51,7 +51,7 @@ router.post("/register", async (req, res) => {
     const savedUser = await newUser.save();
     if (!savedUser) throw Error('Something went wrong saving the user');
     const token = jwt.sign({ id: savedUser._id }, process.env.JWT_TOKEN, {
-      expiresIn: 3600
+      expiresIn: 36000
     });
 
     res.status(200).json({

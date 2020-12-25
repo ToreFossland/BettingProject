@@ -7,7 +7,7 @@ const exchangeSchema = new Schema({
     gnomeId: { type: String },
     name: { type: String, required: true },
     balance: { type: Number },
-    inplay: { type: Number }
+    liability: { type: Number }
 
 }, {
     timestamps: true

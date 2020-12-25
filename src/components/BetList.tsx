@@ -4,6 +4,8 @@ import { loadBets } from '../redux/actions/betActions';
 import { DataGrid, RowsProp, ColDef } from '@material-ui/data-grid';
 import { IBetList, IBetReduxProps, IExistingBet } from "../types/interfaces"
 import { RootState } from "../redux/reducers"
+import { checkTodaysBets, loadTodaysBets, settleOldBets } from "../redux/actions/betActions"
+import store from '../redux/store';
 
 const rows: RowsProp = [
     {
@@ -33,8 +35,9 @@ const columns: ColDef[] = [
 
 const BetList = () => {
     const { bets } = useSelector((state: RootState) => state.bet)
-
-    //const { bets } = bet;
+    useEffect(() => {
+        store.dispatch(checkTodaysBets());
+    }, [bets]);
     return (
         <div style={{ height: 1000, width: '100%' }}>
             {bets ?
@@ -51,6 +54,7 @@ const BetList = () => {
 const mapStateToProps = (state: IBetReduxProps) => ({
     bet: state.bet,
     isAuthenticated: state.auth.isAuthenticated
+
 });
 
-export default connect(mapStateToProps, { loadBets })(BetList);
+export default connect(mapStateToProps)(BetList);

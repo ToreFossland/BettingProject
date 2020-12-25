@@ -3,6 +3,8 @@ const router = require('express').Router();
 let Bet = require('../models/bet.model');
 let User = require('../models/user.model')
 const auth = require("../middleware/auth");
+const { Today } = require('@material-ui/icons');
+const moment = require('moment')
 
 router.get("/", auth, async (req, res) => {
   const bet = await Bet.find({ userId: req.user })
@@ -25,11 +27,14 @@ router.post("/add", auth, async (req, res) => {
       .status(401)
       .json({ msg: "Cannot find user with id, authorization denied" });
   }
+  const formattedBetDate = moment(req.body.betDate).format('YYYY-MM-DD HH:mm:ss')
   const userId = req.body.userId;
   const gnomeId = req.body.gnomeId;
-  const placeDate = Date.parse(req.body.placeDate);
-  const betDate = Date.parse(req.body.betDate);
+  const betDate = formattedBetDate;
+  const homeTeam = req.body.homeTeam;
+  const awayTeam = req.body.awayTeam;
   const event = req.body.event;
+  const eventType = req.body.eventType;
   const backOdds = Number(req.body.backOdds);
   const layOdds = Number(req.body.layOdds);
   const backAmount = Number(req.body.backAmount);
@@ -40,13 +45,18 @@ router.post("/add", auth, async (req, res) => {
   const sport = req.body.sport;
   const freebet = req.body.freebet;
   const outcome = req.body.outcome;
+  const settled = req.body.settled;
+  const didWin = req.body.didWin;
+  const overUnder = req.body.overUnder;
 
   const newBet = new Bet({
     userId,
     gnomeId,
-    placeDate,
     betDate,
+    homeTeam,
+    awayTeam,
     event,
+    eventType,
     backOdds,
     layOdds,
     backAmount,
@@ -57,6 +67,9 @@ router.post("/add", auth, async (req, res) => {
     sport,
     freebet,
     outcome,
+    settled,
+    didWin,
+    overUnder
   });
 
   newBet.save()
@@ -70,13 +83,56 @@ router.route('/:id').delete((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.post('/settle-result', async (req, res) => {
+  await Bet.findById(req.body.params.id)
+    .then(bet => {
+      bet.settled = true;
+      bet.didWin = req.body.params.didWin;
+
+      bet.save()
+        .then(() => res.json("Bet settled"))
+        .catch(err => res.status(400).jason("Error:" + err));
+    })
+    .catch(err => res.status(400).json("Error" + err))
+})
+
+
+router.get('/todays-bets', auth, async (req, res) => {
+  let today = new Date().toISOString().slice(0, 10)
+  let tomorrow = new Date(today)
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  await Bet.find({
+    'betDate': {
+      $gte: today,
+      $lte: tomorrow
+    }
+  })
+    .then(bet => res.json(bet))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
+
+router.get('/unsettled-bets', auth, async (req, res) => {
+  let today = new Date().toISOString().slice(0, 10)
+  await Bet.find({
+    'betDate': {
+      $lt: today,
+    },
+    'settled': false
+  })
+    .then(bet => res.json(bet))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
 router.route('/update/:id').post((req, res) => {
   Bet.findById(req.params.id)
     .then(bet => {
       bet.userId = req.body.username;
-      bet.placeDate = Date.parse(req.body.placeDate);
       bet.betDate = Date.parse(req.body.betDate);
+      bet.homeTeam = req.body.homeTeam;
+      bet.awayTeam = req.body.awayTeam;
       bet.event = req.body.event;
+      bet.eventType = req.body.eventType;
       bet.backOdds = Number(req.body.backOdds);
       bet.layOdds = Number(req.body.layOdds);
       bet.backAmount = Number(req.body.backAmount);
@@ -87,22 +143,13 @@ router.route('/update/:id').post((req, res) => {
       bet.sport = req.body.sport;
       bet.freebet = req.body.freebet;
       bet.outcome = req.body.outcome;
+      bet.settled = req.body.settled;
+      bet.overUnder = req.body.overUnder;
 
       bet.save()
         .then(() => res.json('Bet updated!'))
         .catch(err => res.status(400).json('Error: ' + err));
     })
-    .catch(err => res.status(400).json('Error: ' + err));
-});
-
-router.route('/bets-month').get((req, res) => {
-  Bet.find({
-    'betDate': {
-      $gte: req.body.start,
-      $lte: req.body.end
-    }
-  })
-    .then(bet => res.json(bet))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 

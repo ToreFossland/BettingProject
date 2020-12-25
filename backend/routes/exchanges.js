@@ -36,7 +36,7 @@ router.post("/add", auth, (req, res) => {
             gnomeId,
             name,
             balance,
-            inplay: 0
+            liability: new Number(0.0)
         });
         newExchange.save()
             .then(() => res.json('Exchange added!'))
@@ -47,8 +47,8 @@ router.post("/add", auth, (req, res) => {
             userId,
             gnomeId,
             name,
-            balance: 0,
-            inplay: 0
+            balance: new Number(0.0),
+            liability: new Number(0.0)
         });
         newExchange.save()
             .then(() => res.json('Exchange added!'))
@@ -88,6 +88,43 @@ router.post("/update-inplay", auth, async (req, res) => {
         })
         .catch(err => res.status(400).json('Error: ' + err));
 });
+
+router.post('/set-bet', async (req, res) => {
+    await Exchange.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
+        .then(exchange => {
+            exchange.balance -= (req.body.params.layAmount * (req.body.params.layOdds - 1)).toFixed(2);
+            exchange.liability += (req.body.params.layAmount * (req.body.params.layOdds - 1)).toFixed(2);
+            exchange.save()
+                .then(() => res.json('Exchange updated according to bet'))
+                .catch(err => res.status(400).json('Error: ' + err));
+        })
+        .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.post('/bet-won', async (req, res) => {
+    await Exchange.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
+        .then(exchange => {
+            exchange.liability -= (req.body.params.layAmount * (req.body.params.layOdds - 1)).toFixed(2)
+            exchange.balance += (req.body.params.backAmount + req.body.params.layAmount).toFixed(2)
+
+            exchange.save()
+                .then(() => res.json(exchange))
+                .catch(err => res.status(400).json("Error:" + err))
+        })
+        .catch(err => res.status(400).json("Error:" + err))
+})
+
+router.post('/bet-lost', async (req, res) => {
+    await Exchange.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
+        .then(exchange => {
+            exchange.liability -= (req.body.params.layAmount * (req.body.params.layOdds - 1)).toFixed(2)
+
+            exchange.save()
+                .then(() => res.json(exchange))
+                .catch(err => res.status(400).json("Error:" + err))
+        })
+        .catch(err => res.status(400).json("Error:" + err))
+})
 
 router.route('/').delete((req, res) => {
     Exchange.findOneAndDelete({ username: req.body.username, name: req.body.name })

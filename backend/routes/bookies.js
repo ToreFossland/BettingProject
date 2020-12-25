@@ -8,12 +8,6 @@ router.get("/", auth, async (req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.get("/gnome-bookies", auth, async (req, res) => {
-  await Bookie.find({ userId: req.user, gnomeId: req.body.gnomeId })
-    .then(bookie => res.json(bookie))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
-
 router.delete("/", auth, async (req, res) => {
   await Bookie.findOneAndDelete({ username: req.body.username, name: req.body.name })
     .then(() => res.json('Bookie deleted.'))
@@ -21,14 +15,14 @@ router.delete("/", auth, async (req, res) => {
 });
 
 router.get("/get-balance", auth, async (req, res) => {
-  await Bookie.findOne({ gnomeId: req.body.gnomeId })
+  await Bookie.findOne({ gnomeId: req.body.id, name: req.body.name })
     .then(bookie => res.json(bookie.balance))
     .catch(err => res.status(400).json('Error: ' + err));
 }
 )
 
 router.get("/get-inplay/", auth, async (req, res) => {
-  await Bookie.findOne({ gnomeId: req.body.gnomeId })
+  await Bookie.findOne({ gnomeId: req.body.id, name: req.body.name })
     .then(bookie => res.json(bookie.inplay))
     .catch(err => res.status(400).json('Error: ' + err));
 }
@@ -63,39 +57,67 @@ router.post("/add", auth, (req, res) => {
 
 });
 
-
-router.route('/update-balance').post((req, res) => {
-  Bookie.findOne({ gnomeId: req.body.gnomeId, name: req.body.name })
+router.post('/deposit', async (req, res) => {
+  await Bookie.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
     .then(bookie => {
-      if (req.body.deposit) {
-        bookie.balance = bookie.balance + req.body.balance
-      }
-      else {
-        bookie.balance = bookie.balance - req.body.balance
-      }
+      bookie.balance = bookie.balance + req.body.params.balance
+
       bookie.save()
-        .then(() => res.json('Bookie balance updated!'))
+        .then(() => res.json('Funds deposited to Bookie!'))
+        .catch(err => res.status(400).json('Error: ' + err));
+    })
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.post('/withdraw', async (req, res) => {
+  await Bookie.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
+    .then(bookie => {
+      bookie.balance = bookie.balance - req.body.params.balance
+
+      bookie.save()
+        .then(() => res.json('Funds withdrawn from Bookie!'))
         .catch(err => res.status(400).json('Error: ' + err));
     })
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 
-router.route('/update-inplay/').post((req, res) => {
-  Bookie.findOne({ username: req.body.username, name: req.body.name })
+router.post('/set-bet', async (req, res) => {
+  Bookie.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
     .then(bookie => {
-      if (req.body.settled) {
-        bookie.inplay = bookie.inplay - req.body.inplay
-      }
-      else {
-        bookie.inplay = bookie.inplay + req.body.inplay
-      }
+      bookie.balance -= req.body.params.backAmount
+      bookie.inplay += req.body.params.backAmount
       bookie.save()
-        .then(() => res.json('Bookie inplay updated!'))
+        .then(() => res.json('Bookie updated according to bet'))
         .catch(err => res.status(400).json('Error: ' + err));
     })
     .catch(err => res.status(400).json('Error: ' + err));
 });
+
+router.post('/bet-won', async (req, res) => {
+  await Bookie.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
+    .then(bookie => {
+      bookie.inplay -= req.body.params.backAmount
+      bookie.balance += req.body.params.backAmount * req.body.params.odds
+
+      bookie.save()
+        .then(() => res.json(bookie))
+        .catch(err => res.status(400).json("Error:" + err))
+    })
+    .catch(err => res.status(400).json("Error:" + err))
+})
+
+router.post('/bet-lost', async (req, res) => {
+  await Bookie.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
+    .then(bookie => {
+      bookie.inplay -= req.body.params.backAmount
+
+      bookie.save()
+        .then(() => res.json(bookie))
+        .catch(err => res.status(400).json("Error:" + err))
+    })
+    .catch(err => res.status(400).json("Error:" + err))
+})
 
 
 module.exports = router;

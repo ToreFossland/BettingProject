@@ -5,9 +5,12 @@ import {
     EXCHANGE_LOADED,
     WALLET_LOADING,
     WALLET_LOADED,
-    AUTH_ERROR
+    AUTH_ERROR,
+    BOOKIE_UPDATED,
+    BANK_ERROR,
+    EXCHANGE_UPDATED
 } from '../actions/types';
-import { IExistingBet } from "../../types/interfaces"
+import { IExistingBet, IExistingBookie, IExistingExchange } from "../../types/interfaces"
 
 const initialState = {
     token: localStorage.getItem('token'),
@@ -33,6 +36,12 @@ export default function (state = initialState, action: any) {
                 isLoading: false,
                 bookies: action.payload
             };
+        case BOOKIE_UPDATED:
+            return {
+                ...state,
+                bookies: state.bookies.map((bookie: IExistingBookie) =>
+                    (bookie.name === action.payload.name) ? action.payload : bookie)
+            }
         case EXCHANGE_LOADING:
             return {
                 ...state,
@@ -44,6 +53,12 @@ export default function (state = initialState, action: any) {
                 isLoading: false,
                 exchanges: action.payload
             };
+        case EXCHANGE_UPDATED:
+            return {
+                ...state,
+                exchanges: state.exchanges.map((exchange: IExistingExchange) =>
+                    (exchange.name === action.payload.name) ? action.payload : exchange)
+            }
         case WALLET_LOADING:
             return {
                 ...state,
@@ -56,6 +71,10 @@ export default function (state = initialState, action: any) {
                 wallets: action.payload
             };
 
+        case BANK_ERROR:
+            return {
+                ...state
+            }
         default:
             return state;
     }

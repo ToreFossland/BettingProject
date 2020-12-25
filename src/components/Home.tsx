@@ -10,18 +10,25 @@ import PromotionList from './PromotionList';
 import BetList from './BetList';
 import WithAuth from "./WithAuth";
 import { loadBookies, loadExchanges, loadWallets } from '../redux/actions/bankActions';
-import { loadBets } from "../redux/actions/betActions"
+import { loadBets, loadTodaysBets, settleOldBets } from "../redux/actions/betActions"
 import store from '../redux/store';
+import { connect, useSelector } from 'react-redux';
+import { RootState } from "../redux/reducers"
+import { IBetReduxProps } from '../types/interfaces';
+import { Interface } from 'readline';
 
 
 
 function Home() {
+    const { settled_old_bets } = useSelector((state: RootState) => state.bet)
     useEffect(() => {
         store.dispatch(loadBookies());
         store.dispatch(loadExchanges());
         store.dispatch(loadWallets());
         store.dispatch(loadBets());
-    }, []);
+        store.dispatch(loadTodaysBets());
+        store.dispatch(settleOldBets())
+    }, [settled_old_bets]);
     return (
         <Grid container spacing={5} alignItems="flex-end" >
             <Grid item xs={12}>
@@ -55,4 +62,11 @@ function Home() {
     )
 }
 
-export default WithAuth(Home);
+const mapStateToProps = (state: IBetReduxProps) => {
+    return {
+        bet: state.bet,
+        isAuthenticated: state.auth.isAuthenticated
+    }
+}
+
+export default connect(mapStateToProps)(WithAuth(Home));

@@ -171,6 +171,9 @@ export interface IBetList {
 export interface IBetReduxProps extends IAuthReduxProps {
   bet: {
     bets: IExistingBet[];
+    todays_bets: IExistingBet[];
+    settling_bets: Boolean;
+    settled_old_bets: Boolean
   };
 }
 
@@ -185,14 +188,14 @@ export interface IExistingBookie {
 export interface IExistingWallet {
   _id: string;
   userId: String,
-  name: Number
+  name: String,
   balance: Number,
 }
 
 export interface IExistingExchange {
   _id: string;
   userId: String,
-  name: Number
+  name: String,
   balance: Number,
   inplay: Number
 }

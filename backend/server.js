@@ -25,12 +25,14 @@ const usersRouter = require('./routes/users');
 const bookiesRouter = require('./routes/bookies');
 const walletsRouter = require('./routes/wallets');
 const exchangesRouter = require("./routes/exchanges")
+const teamRouter = require('./routes/teams')
 
 app.use('/bets', betsRouter);
 app.use('/users', usersRouter);
 app.use('/bookies', bookiesRouter);
 app.use('/wallets', walletsRouter);
 app.use('/exchanges', exchangesRouter);
+app.use('/teams', teamRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);

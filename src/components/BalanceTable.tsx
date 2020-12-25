@@ -52,7 +52,7 @@ const SpanningTable = () => {
   const classes = useStyles();
 
   const { bookies } = useSelector((state: RootState) => state.bank);
-  const { wallets } = useSelector((state: RootState) => state.bank);;
+  const { wallets } = useSelector((state: RootState) => state.bank);
   const { exchanges } = useSelector((state: RootState) => state.bank);
 
   const totBookieBalance = bookies.map((el: IExistingBookie) => el.balance).reduce((a: number, b: number) => a.valueOf() + b.valueOf(), 0).valueOf()
@@ -60,7 +60,7 @@ const SpanningTable = () => {
   const totWalletBalance = wallets.map((el: IExistingWallet) => el.balance).reduce((a: number, b: number) => a.valueOf() + b.valueOf(), 0).valueOf()
 
   const rows = [
-    createRow('Bookies', totBookieBalance, 1.15), 
+    createRow('Bookies', totBookieBalance, 1.15),
     createRow('Exchanges', totExchangeBalance, 45.99),
     createRow('E-Wallets', totWalletBalance, 17.99),
   ];
