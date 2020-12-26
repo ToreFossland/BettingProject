@@ -105,7 +105,7 @@ router.post('/bet-won', async (req, res) => {
     await Exchange.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
         .then(exchange => {
             exchange.liability -= (req.body.params.layAmount * (req.body.params.layOdds - 1)).toFixed(2)
-            exchange.balance += (req.body.params.backAmount + req.body.params.layAmount).toFixed(2)
+            exchange.balance += (req.body.params.layAmount * (req.body.params.layOdds - 1) + req.body.params.layAmount).toFixed(2)
 
             exchange.save()
                 .then(() => res.json(exchange))

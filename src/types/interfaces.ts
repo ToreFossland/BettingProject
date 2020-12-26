@@ -197,7 +197,7 @@ export interface IExistingExchange {
   userId: String,
   name: String,
   balance: Number,
-  inplay: Number
+  liability: Number
 }
 
 export interface IBankList {

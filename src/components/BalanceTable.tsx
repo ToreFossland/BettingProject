@@ -58,11 +58,13 @@ const SpanningTable = () => {
   const totBookieBalance = bookies.map((el: IExistingBookie) => el.balance).reduce((a: number, b: number) => a.valueOf() + b.valueOf(), 0).valueOf()
   const totExchangeBalance = exchanges.map((el: IExistingExchange) => el.balance).reduce((a: number, b: number) => a.valueOf() + b.valueOf(), 0).valueOf()
   const totWalletBalance = wallets.map((el: IExistingWallet) => el.balance).reduce((a: number, b: number) => a.valueOf() + b.valueOf(), 0).valueOf()
+  const totBookieInplay = bookies.map((el: IExistingBookie) => el.inplay).reduce((a: number, b: number) => a.valueOf() + b.valueOf(), 0).valueOf()
+  const totExchangeLiabilty = exchanges.map((el: IExistingExchange) => el.liability).reduce((a: number, b: number) => a.valueOf() + b.valueOf(), 0).valueOf()
 
   const rows = [
-    createRow('Bookies', totBookieBalance, 1.15),
-    createRow('Exchanges', totExchangeBalance, 45.99),
-    createRow('E-Wallets', totWalletBalance, 17.99),
+    createRow('Bookies', totBookieBalance, totBookieInplay),
+    createRow('Exchanges', totExchangeBalance, totExchangeLiabilty),
+    createRow('E-Wallets', totWalletBalance, 0),
   ];
 
   const invoiceSubtotal = subtotal(rows);
