@@ -9,21 +9,19 @@ import LastActions from './LastActions';
 import PromotionList from './PromotionList';
 import BetList from './BetList';
 import WithAuth from "./WithAuth";
-import { loadBookies, loadExchanges, loadWallets } from '../redux/actions/bankActions';
+import { loadWallets } from '../redux/actions/bankActions';
 import { loadBets, loadTodaysBets, settleOldBets } from "../redux/actions/betActions"
 import store from '../redux/store';
 import { connect, useSelector } from 'react-redux';
 import { RootState } from "../redux/reducers"
 import { IBetReduxProps } from '../types/interfaces';
-import { Interface } from 'readline';
+
 
 
 
 function Home() {
     const { settled_old_bets } = useSelector((state: RootState) => state.bet)
     useEffect(() => {
-        store.dispatch(loadBookies());
-        store.dispatch(loadExchanges());
         store.dispatch(loadWallets());
         store.dispatch(loadBets());
         store.dispatch(loadTodaysBets());

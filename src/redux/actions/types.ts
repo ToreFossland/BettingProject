@@ -24,6 +24,9 @@ export const SETTELD_OLD_BETS = 'SETTELD_UNSETTLED_BETS'
 
 
 export const BANK_ERROR = "BANK_ERROR";
+export const BANK_UPDATED = "BANK_UPDATED";
+export const UPDATING_BANK = "UPDATING_BANK";
+
 
 export const BOOKIE_LOADING = "BOOKIE_LOADING";
 export const BOOKIE_LOADED = "BOOKIE_LOADED";

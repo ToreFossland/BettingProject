@@ -1,9 +1,7 @@
 
 const router = require('express').Router();
 let Bet = require('../models/bet.model');
-let User = require('../models/user.model')
 const auth = require("../middleware/auth");
-const { Today } = require('@material-ui/icons');
 const moment = require('moment')
 
 router.get("/", auth, async (req, res) => {
@@ -14,7 +12,7 @@ router.get("/", auth, async (req, res) => {
 });
 
 router.get("/gnome-bets", auth, async (req, res) => {
-  const bet = await Bet.find({ userId: req.user, gnomeId: req.body.gnomeId })
+  const bet = await Bet.find({ gnomeId: req.body.gnomeId })
   res.json(
     bet
   )
@@ -77,12 +75,6 @@ router.post("/add", auth, async (req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/:id').delete((req, res) => {
-  Bet.findByIdAndDelete(req.params.id)
-    .then(() => res.json('Bet deleted.'))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
-
 router.post('/settle-result', async (req, res) => {
   await Bet.findById(req.body.params.id)
     .then(bet => {
@@ -124,7 +116,7 @@ router.get('/unsettled-bets', auth, async (req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/update/:id').post((req, res) => {
+router.post('/update/:id', (req, res) => {
   Bet.findById(req.params.id)
     .then(bet => {
       bet.userId = req.body.username;
@@ -150,6 +142,12 @@ router.route('/update/:id').post((req, res) => {
         .then(() => res.json('Bet updated!'))
         .catch(err => res.status(400).json('Error: ' + err));
     })
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
+router.delete('/:id', (req, res) => {
+  Bet.findByIdAndDelete(req.params.id)
+    .then(() => res.json('Bet deleted.'))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 

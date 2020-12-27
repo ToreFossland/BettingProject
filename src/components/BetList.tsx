@@ -1,10 +1,9 @@
 import React, { useEffect } from "react"
 import { connect, useSelector } from 'react-redux';
-import { loadBets } from '../redux/actions/betActions';
 import { DataGrid, RowsProp, ColDef } from '@material-ui/data-grid';
-import { IBetList, IBetReduxProps, IExistingBet } from "../types/interfaces"
+import { IBetReduxProps, IExistingBet } from "../types/interfaces"
 import { RootState } from "../redux/reducers"
-import { checkTodaysBets, loadTodaysBets, settleOldBets } from "../redux/actions/betActions"
+import { checkTodaysBets } from "../redux/actions/betActions"
 import store from '../redux/store';
 
 const rows: RowsProp = [
@@ -12,9 +11,7 @@ const rows: RowsProp = [
         id: "", placeDate: new Date(), BetDate: new Date(), event: "", backOdds: 0, layOdds: 0, backAmount: 0, layAmount: 0, bookie: "",
         exchange: "", commision: 0, sport: "", freebet: "", outcome: ""
     },
-
 ];
-
 
 const columns: ColDef[] = [
     { field: 'placeDate', headerName: 'Place Date', width: 150 },

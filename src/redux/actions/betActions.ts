@@ -9,11 +9,12 @@ import {
   TODAYS_BETS_SETTLED,
   CHECKING_TODAYS_BETS,
   SETTELING_OLD_BETS,
-  SETTELD_OLD_BETS
+  SETTELD_OLD_BETS,
+  BANK_UPDATED,
+  UPDATING_BANK
 } from './types';
 import { tokenConfig } from "./authActions"
 import moment from 'moment'
-import store from '../store';
 import { updateBookieBalance, updateExchangeBalance } from './bankActions';
 
 require('dotenv').config();
@@ -66,13 +67,15 @@ export const settleOldBets = () => async (dispatch: Function, getState: Function
     return
   }
   dispatch({ type: SETTELING_OLD_BETS })
+  dispatch({ type: UPDATING_BANK })
   for (var i = 0; i < unsettled_bets.data.length; i++) {
     if (!unsettled_bets.data[i].settled) {
       let bet = await settleBet(dispatch, getState, unsettled_bets.data[i])
-      updateBookieBalance(dispatch, getState, bet)
-      updateExchangeBalance(dispatch, getState, bet)
+      await updateBookieBalance(dispatch, bet)
+      await updateExchangeBalance(dispatch, bet)
     }
   }
+  dispatch({ type: BANK_UPDATED })
   dispatch({ type: SETTELD_OLD_BETS })
 }
 
@@ -83,6 +86,7 @@ export const checkTodaysBets = () => async (dispatch: Function, getState: Functi
     return
   }
   dispatch({ type: CHECKING_TODAYS_BETS })
+  dispatch({ type: UPDATING_BANK })
   for (var i = 0; i < todays_bets.length; i++) {
     let bet = todays_bets[i]
     const eventTime = bet.betDate;
@@ -90,11 +94,12 @@ export const checkTodaysBets = () => async (dispatch: Function, getState: Functi
     const now = new Date().toISOString()
     if (now > endTime && !bet.settled) {
       bet = await settleBet(dispatch, getState, bet)
-      updateBookieBalance(dispatch, getState, bet)
-      updateExchangeBalance(dispatch, getState, bet)
+      await updateBookieBalance(dispatch, bet)
+      await updateExchangeBalance(dispatch, bet)
     }
     todays_bets[i] = bet
   }
+  dispatch({ type: BANK_UPDATED })
   dispatch({ type: TODAYS_BETS_SETTLED, payload: todays_bets })
 }
 
@@ -168,6 +173,9 @@ function checkIfWonBet(lastFixture: any, bet: any) {
 
     case "BTTS":
       if (lastFixture.goalsHomeTeam > 0 && lastFixture.goalsAwayTeam > 0 && bet.outcome === "Yes") {
+        return true
+      }
+      if ((lastFixture.goalsHomeTeam === 0 || lastFixture.goalsAwayTeam === 0) && bet.outcome === "No") {
         return true
       }
       return false

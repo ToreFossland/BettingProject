@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,11 +8,11 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
-import { DataGrid, RowsProp, ColDef } from '@material-ui/data-grid';
 import { loadBookies, loadExchanges, loadWallets } from '../redux/actions/bankActions';
-import { IBankList, IBankReduxProps, IExistingBookie, IExistingExchange, IExistingWallet } from "../types/interfaces"
+import { IBankReduxProps, IExistingBookie, IExistingExchange, IExistingWallet } from "../types/interfaces"
 import { connect, useSelector } from 'react-redux';
 import { RootState } from "../redux/reducers"
+import store from '../redux/store';
 
 const TAX_RATE = 0.07;
 
@@ -50,6 +50,12 @@ function subtotal(items: any) {
 const SpanningTable = () => {
 
   const classes = useStyles();
+
+  const { bank_updated } = useSelector((state: RootState) => state.bank);
+  useEffect(() => {
+    store.dispatch(loadBookies());
+    store.dispatch(loadExchanges());
+  }, [bank_updated]);
 
   const { bookies } = useSelector((state: RootState) => state.bank);
   const { wallets } = useSelector((state: RootState) => state.bank);

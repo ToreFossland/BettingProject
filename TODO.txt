@@ -1,11 +1,1 @@
-Oppdatere bet modellen og ligge til en type som definerer hvilket resultat du spiller på. Om det er Home-Draw-Away, resultat eller BTTS
-eller lignende
-
-Ligge til:
-Home team
-Away team 
-Result type (HDA, resullt, BTTS)
-Result (use name of team you bet on)
-
-
-Når du logger inn må du gå gjennom databasen og ta alle bets som er ferdig med ikke settlet og settle de 
+FRONTEND!!

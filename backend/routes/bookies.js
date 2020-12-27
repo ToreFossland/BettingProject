@@ -8,12 +8,6 @@ router.get("/", auth, async (req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.delete("/", auth, async (req, res) => {
-  await Bookie.findOneAndDelete({ username: req.body.username, name: req.body.name })
-    .then(() => res.json('Bookie deleted.'))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
-
 router.get("/get-balance", auth, async (req, res) => {
   await Bookie.findOne({ gnomeId: req.body.id, name: req.body.name })
     .then(bookie => res.json(bookie.balance))
@@ -97,12 +91,12 @@ router.post('/set-bet', async (req, res) => {
 router.post('/bet-won', async (req, res) => {
   await Bookie.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
     .then(bookie => {
-      if (req.body.params.freebet) {
-        bookie.balance += (req.body.params.backAmount * req.body.params.odds) - req.body.params.backAmount
+      if (req.body.params.freebet === "true") {
+        bookie.balance += (req.body.params.backAmount * req.body.params.backOdds) - req.body.params.backAmount
       }
       else {
         bookie.inplay -= req.body.params.backAmount
-        bookie.balance += req.body.params.backAmount * req.body.params.odds
+        bookie.balance += req.body.params.backAmount * req.body.params.backOdds
       }
       bookie.save()
         .then(() => res.json(bookie))
@@ -114,7 +108,7 @@ router.post('/bet-won', async (req, res) => {
 router.post('/bet-lost', async (req, res) => {
   await Bookie.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
     .then(bookie => {
-      if (!req.body.params.freebet) {
+      if (req.body.params.freebet === "false") {
         bookie.inplay -= req.body.params.backAmount
       }
       bookie.save()
@@ -124,5 +118,10 @@ router.post('/bet-lost', async (req, res) => {
     .catch(err => res.status(400).json("Error:" + err))
 })
 
+router.delete("/", auth, async (req, res) => {
+  await Bookie.findOneAndDelete({ username: req.body.username, name: req.body.name })
+    .then(() => res.json('Bookie deleted.'))
+    .catch(err => res.status(400).json('Error: ' + err));
+});
 
 module.exports = router;

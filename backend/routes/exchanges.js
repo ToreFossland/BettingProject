@@ -14,20 +14,6 @@ router.get("/gnome-exchanges", auth, async (req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.get("/get-balance", auth, async (req, res) => {
-    await Exchange.findOne({ gnomeId: req.body.gnomeId, name: req.body.name })
-        .then(exchange => res.json(exchange.balance))
-        .catch(err => res.status(400).json('Error: ' + err));
-}
-)
-
-router.get("/get-inplay/", auth, async (req, res) => {
-    await Exchange.findOne({ gnomeId: req.body.gnomeId, name: req.body.name })
-        .then(exchange => res.json(exchange.inplay))
-        .catch(err => res.status(400).json('Error: ' + err));
-}
-)
-
 router.post("/add", auth, (req, res) => {
     const { userId, gnomeId, name, balance } = req.body;
     if (balance) {
@@ -92,8 +78,11 @@ router.post("/update-inplay", auth, async (req, res) => {
 router.post('/set-bet', async (req, res) => {
     await Exchange.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
         .then(exchange => {
-            exchange.balance -= (req.body.params.layAmount * (req.body.params.layOdds - 1)).toFixed(2);
-            exchange.liability += (req.body.params.layAmount * (req.body.params.layOdds - 1)).toFixed(2);
+            exchange.balance -= req.body.params.layAmount * (req.body.params.layOdds - 1)
+            exchange.liability += req.body.params.layAmount * (req.body.params.layOdds - 1)
+            exchange.liability = parseFloat(exchange.liability.toFixed(2))
+            exchange.balance = parseFloat(exchange.balance.toFixed(2))
+
             exchange.save()
                 .then(() => res.json('Exchange updated according to bet'))
                 .catch(err => res.status(400).json('Error: ' + err));
@@ -104,8 +93,11 @@ router.post('/set-bet', async (req, res) => {
 router.post('/bet-won', async (req, res) => {
     await Exchange.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
         .then(exchange => {
-            exchange.liability -= (req.body.params.layAmount * (req.body.params.layOdds - 1)).toFixed(2)
-            exchange.balance += (req.body.params.layAmount * (req.body.params.layOdds - 1) + req.body.params.layAmount).toFixed(2)
+            exchange.liability -= req.body.params.layAmount * (req.body.params.layOdds - 1)
+            exchange.balance += req.body.params.layAmount * (req.body.params.layOdds - 1) + req.body.params.layAmount
+
+            exchange.liability = parseFloat(exchange.liability.toFixed(2))
+            exchange.balance = parseFloat(exchange.balance.toFixed(2))
 
             exchange.save()
                 .then(() => res.json(exchange))
@@ -117,7 +109,8 @@ router.post('/bet-won', async (req, res) => {
 router.post('/bet-lost', async (req, res) => {
     await Exchange.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
         .then(exchange => {
-            exchange.liability -= (req.body.params.layAmount * (req.body.params.layOdds - 1)).toFixed(2)
+            exchange.liability -= req.body.params.layAmount * (req.body.params.layOdds - 1)
+            exchange.liability = parseFloat(exchange.liability.toFixed(2))
 
             exchange.save()
                 .then(() => res.json(exchange))

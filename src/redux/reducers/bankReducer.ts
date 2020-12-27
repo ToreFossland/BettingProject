@@ -8,16 +8,19 @@ import {
     AUTH_ERROR,
     BOOKIE_UPDATED,
     BANK_ERROR,
-    EXCHANGE_UPDATED
+    EXCHANGE_UPDATED,
+    BANK_UPDATED,
+    UPDATING_BANK
 } from '../actions/types';
-import { IExistingBet, IExistingBookie, IExistingExchange } from "../../types/interfaces"
+import { IExistingBookie, IExistingExchange } from "../../types/interfaces"
 
 const initialState = {
     token: localStorage.getItem('token'),
     isLoading: false,
     bookies: [],
     exchanges: [],
-    wallets: []
+    wallets: [],
+    bank_updated: false
 };
 
 
@@ -70,7 +73,16 @@ export default function (state = initialState, action: any) {
                 isLoading: false,
                 wallets: action.payload
             };
-
+        case UPDATING_BANK:
+            return {
+                ...state,
+                bank_updated: false
+            }
+        case BANK_UPDATED:
+            return {
+                ...state,
+                bank_updated: true
+            }
         case BANK_ERROR:
             return {
                 ...state

@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { createMuiTheme, ThemeProvider, makeStyles } from '@material-ui/core/styles';
-import { Box, Container, Grid, withStyles, Fab } from '@material-ui/core';
+import { Container, withStyles } from '@material-ui/core';
 import { grey, blue, amber } from '@material-ui/core/colors';
-import Navbar from './components/Navbar';
 import LoginModal from "./components/auth/Login"
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import { loadUser } from './redux/actions/authActions';
 import Home from "./components/Home";
-import { loadBets } from './redux/actions/betActions';
-import { loadBookies, loadExchanges, loadWallets } from './redux/actions/bankActions';
 
 
 
