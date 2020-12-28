@@ -16,10 +16,9 @@ import Paper from '@material-ui/core/Paper';
 
 
 import {
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  } from 'recharts';
-  
-  import {Box} from '@material-ui/core';
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+} from 'recharts';
+
 
 const useStyles = makeStyles({
   table: {
@@ -27,7 +26,7 @@ const useStyles = makeStyles({
   },
 });
 
-function createData(name : any, calories : any, fat : any, carbs : any, protein: any) {
+function createData(name: any, calories: any, fat: any, carbs: any, protein: any) {
   return { name, calories, fat, carbs, protein };
 }
 
@@ -41,28 +40,28 @@ const rows = [
 
 
 const data = [
-    {
-      name: 'Page A', 2020: 4000, 2019: 2400, amt: 2400,
-    },
-    {
-      name: 'Page B', 2020: 3000, 2019: 1398, amt: 2210,
-    },
-    {
-      name: 'Page C', 2020: 2000, 2019: 9800, amt: 2290,
-    },
-    {
-      name: 'Page D', 2020: 2780, 2019: 3908, amt: 2000,
-    },
-    {
-      name: 'Page E', 2020: 1890, 2019: 4800, amt: 2181,
-    },
-    {
-      name: 'Page F', 2020: 2390, 2019: 3800, amt: 2500,
-    },
-    {
-      name: 'Page G', 2020: 3490, 2019: 4300, amt: 2100,
-    },
-  ];
+  {
+    name: 'Page A', 2020: 4000, 2019: 2400, amt: 2400,
+  },
+  {
+    name: 'Page B', 2020: 3000, 2019: 1398, amt: 2210,
+  },
+  {
+    name: 'Page C', 2020: 2000, 2019: 9800, amt: 2290,
+  },
+  {
+    name: 'Page D', 2020: 2780, 2019: 3908, amt: 2000,
+  },
+  {
+    name: 'Page E', 2020: 1890, 2019: 4800, amt: 2181,
+  },
+  {
+    name: 'Page F', 2020: 2390, 2019: 3800, amt: 2500,
+  },
+  {
+    name: 'Page G', 2020: 3490, 2019: 4300, amt: 2100,
+  },
+];
 
 export default function Chart() {
   const classes = useStyles();
@@ -94,22 +93,22 @@ export default function Chart() {
             <Bar dataKey="2020" fill="#82ca9d" />
             </BarChart>
         </Box> */}
-        <LineChart
-        width= {window.innerWidth/2}
-        height={700}
-        data={data}
-        margin={{
-          top: 5, right: 30, left: 20, bottom: 5,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Line type="linear" strokeWidth = {5} dataKey="2019" stroke="#b51849" activeDot={{ r: 8 }} />
-        <Line type="linear" strokeWidth = {5} dataKey="2020" stroke="#82ca9d" />
-      </LineChart>
+          <LineChart
+            width={window.innerWidth / 2}
+            height={700}
+            data={data}
+            margin={{
+              top: 5, right: 30, left: 20, bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="linear" strokeWidth={5} dataKey="2019" stroke="#b51849" activeDot={{ r: 8 }} />
+            <Line type="linear" strokeWidth={5} dataKey="2020" stroke="#82ca9d" />
+          </LineChart>
         </TableBody>
       </Table>
     </TableContainer>
