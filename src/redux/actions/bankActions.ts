@@ -75,15 +75,14 @@ export const loadWallets = () => (dispatch: Function, getState: Function) => {
 
 export async function updateBookieBalance(dispatch: Function, bet: any) {
     if (bet.didWin) {
-        const params = {
-            id: bet.gnomeId,
-            name: bet.bookie,
-            backAmount: bet.backAmount,
-            backOdds: bet.backOdds,
-            freebet: bet.freebet
-        }
         await axios.post('http://localhost:5000/bookies/bet-won', {
-            params: params
+            params: {
+                id: bet.gnomeId,
+                name: bet.bookie,
+                backAmount: bet.backAmount,
+                backOdds: bet.backOdds,
+                freebet: bet.freebet
+            }
         })
             .catch(err => {
                 dispatch(returnErrors(err.response.data, err.response.status));
@@ -93,14 +92,13 @@ export async function updateBookieBalance(dispatch: Function, bet: any) {
             })
     }
     else {
-        const params = {
-            id: bet.gnomeId,
-            name: bet.bookie,
-            backAmount: bet.backAmount,
-            freebet: bet.freebet
-        }
         await axios.post('http://localhost:5000/bookies/bet-lost', {
-            params: params
+            params: {
+                id: bet.gnomeId,
+                name: bet.bookie,
+                backAmount: bet.backAmount,
+                freebet: bet.freebet
+            }
         })
             .catch(err => {
                 dispatch(returnErrors(err.response.data, err.response.status));

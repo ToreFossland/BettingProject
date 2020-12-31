@@ -8,7 +8,7 @@ import {
   FIXTURE_ERROR,
   TODAYS_BETS_SETTLED,
   CHECKING_TODAYS_BETS,
-  SETTELING_OLD_BETS,
+  SETTLING_OLD_BETS,
   SETTELD_OLD_BETS,
   BANK_UPDATED,
   UPDATING_BANK
@@ -62,15 +62,15 @@ export const loadTodaysBets = () => (dispatch: Function, getState: Function) => 
 };
 
 export const settleOldBets = () => async (dispatch: Function, getState: Function) => {
-  let unsettled_bets = await axios.get('http://localhost:5000/bets/unsettled-bets', tokenConfig(getState))
+  const unsettled_bets = await axios.get('http://localhost:5000/bets/unsettled-bets', tokenConfig(getState))
   if (!unsettled_bets.data.length || getState().bet.settling_bets || getState().bet.settled_old_bets) {
     return
   }
-  dispatch({ type: SETTELING_OLD_BETS })
-  dispatch({ type: UPDATING_BANK })
+  dispatch({ type: SETTLING_OLD_BETS })
   for (var i = 0; i < unsettled_bets.data.length; i++) {
     if (!unsettled_bets.data[i].settled) {
-      let bet = await settleBet(dispatch, getState, unsettled_bets.data[i])
+      const bet = await settleBet(dispatch, getState, unsettled_bets.data[i])
+      dispatch({ type: UPDATING_BANK })
       await updateBookieBalance(dispatch, bet)
       await updateExchangeBalance(dispatch, bet)
     }
@@ -86,7 +86,6 @@ export const checkTodaysBets = () => async (dispatch: Function, getState: Functi
     return
   }
   dispatch({ type: CHECKING_TODAYS_BETS })
-  dispatch({ type: UPDATING_BANK })
   for (var i = 0; i < todays_bets.length; i++) {
     let bet = todays_bets[i]
     const eventTime = bet.betDate;
@@ -94,6 +93,7 @@ export const checkTodaysBets = () => async (dispatch: Function, getState: Functi
     const now = new Date().toISOString()
     if (now > endTime && !bet.settled) {
       bet = await settleBet(dispatch, getState, bet)
+      dispatch({ type: UPDATING_BANK })
       await updateBookieBalance(dispatch, bet)
       await updateExchangeBalance(dispatch, bet)
     }

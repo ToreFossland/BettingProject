@@ -6,7 +6,7 @@ import {
   FIXTURE_ERROR,
   TODAYS_BETS_SETTLED,
   CHECKING_TODAYS_BETS,
-  SETTELING_OLD_BETS,
+  SETTLING_OLD_BETS,
   SETTELD_OLD_BETS
 } from '../actions/types';
 
@@ -52,7 +52,7 @@ export default function (state = initialState, action: any) {
         todays_bets: action.payload,
         settling_bets: false
       }
-    case SETTELING_OLD_BETS:
+    case SETTLING_OLD_BETS:
       return {
         ...state,
         settling_bets: true
