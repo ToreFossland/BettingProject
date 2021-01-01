@@ -5,7 +5,7 @@ import {
   BETS_LOADING,
   AUTH_ERROR,
   TODAYS_BETS_LOADED,
-  FIXTURE_ERROR,
+  TODAYS_BETS_LOADING,
   TODAYS_BETS_SETTLED,
   CHECKING_TODAYS_BETS,
   SETTLING_OLD_BETS,
@@ -43,7 +43,7 @@ export const loadBets = () => (dispatch: Function, getState: Function) => {
 
 export const loadTodaysBets = () => (dispatch: Function, getState: Function) => {
   // Bet loading
-  dispatch({ type: BETS_LOADING });
+  dispatch({ type: TODAYS_BETS_LOADING });
 
   axios
     .get('http://localhost:5000/bets/todays-bets/', tokenConfig(getState))
@@ -69,10 +69,7 @@ export const settleOldBets = () => async (dispatch: Function, getState: Function
   dispatch({ type: SETTLING_OLD_BETS })
   for (var i = 0; i < unsettled_bets.data.length; i++) {
     if (!unsettled_bets.data[i].settled) {
-      const bet = await settleBet(dispatch, getState, unsettled_bets.data[i])
-      dispatch({ type: UPDATING_BANK })
-      await updateBookieBalance(dispatch, bet)
-      await updateExchangeBalance(dispatch, bet)
+      await settleBet(dispatch, getState, unsettled_bets.data[i])
     }
   }
   dispatch({ type: BANK_UPDATED })
@@ -93,9 +90,6 @@ export const checkTodaysBets = () => async (dispatch: Function, getState: Functi
     const now = new Date().toISOString()
     if (now > endTime && !bet.settled) {
       bet = await settleBet(dispatch, getState, bet)
-      dispatch({ type: UPDATING_BANK })
-      await updateBookieBalance(dispatch, bet)
-      await updateExchangeBalance(dispatch, bet)
     }
     todays_bets[i] = bet
   }
@@ -105,36 +99,48 @@ export const checkTodaysBets = () => async (dispatch: Function, getState: Functi
 
 async function settleBet(dispatch: Function, getState: Function, bet: any) {
   const token = getState().auth.token
-  const teamId = await axios.get("http://localhost:5000/teams/team-id", { params: { teamName: bet.homeTeam }, headers: { "x-auth-token": token } })
-  const lastFixture = await getLastFixture(teamId.data, bet.awayTeam)
-  if (lastFixture) {
-    if (lastFixture.score.fulltime) {
-      const didWin = checkIfWonBet(lastFixture, bet)
-      await axios.post("http://localhost:5000/bets/settle-result", { params: { id: bet._id, didWin: didWin } })
-        .then(res => console.log(res.data))
-        .catch(err => {
-          dispatch(returnErrors(err.response.data, err.response.status));
-          dispatch({
-            type: FIXTURE_ERROR
-          });
-        });
-      //oppdatere balanse hos bookies og exchanges
-      bet.settled = true;
-      bet.didWin = didWin;
+  await axios.get("http://localhost:5000/teams/team-id", { params: { teamName: bet.homeTeam }, headers: { "x-auth-token": token } })
+    .then(async (res) => {
+      const lastFixture = await getLastFixture(res.data, bet.awayTeam)
+      if (lastFixture) {
+        if (lastFixture.score.fulltime) {
+          const didWin = checkIfWonBet(lastFixture, bet)
+
+          if (didWin === "Some error has occured") {
+            dispatch(returnErrors({ msg: 'The outcome of the event is not inputed correct' }, 400))
+          }
+
+          else {
+            await axios.post("http://localhost:5000/bets/settle-result", { params: { id: bet._id, didWin: didWin } })
+              .then(async (res) => {
+                console.log(res.data);
+
+                bet.settled = true;
+                bet.didWin = didWin;
+
+                dispatch({ type: UPDATING_BANK })
+                await updateBookieBalance(dispatch, bet)
+                await updateExchangeBalance(dispatch, bet)
+              })
+
+              .catch(err => {
+                dispatch(returnErrors(err.response.data, err.response.status));
+              });
+          }
+        }
+        else {
+          dispatch(returnErrors({ msg: 'Fixture not finished yet' }, 400))
+        }
+      }
+      else {
+        dispatch(returnErrors({ msg: 'The fixture is not correct' }, 400))
+      }
     }
-    else {
-      dispatch(returnErrors({ msg: 'Fixture not finished yet' }, 400))
-      dispatch({
-        type: FIXTURE_ERROR
-      })
-    }
-  }
-  else {
-    dispatch(returnErrors({ msg: 'The fixture is not correct' }, 400))
-    dispatch({
-      type: FIXTURE_ERROR
+    )
+    .catch(err => {
+      dispatch(returnErrors({ msg: 'Cannot find temaId. Check that homeTeam is correct' }, err.response.status))
     })
-  }
+
   return bet
 }
 

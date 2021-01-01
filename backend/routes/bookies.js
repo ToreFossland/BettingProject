@@ -79,7 +79,7 @@ router.post('/withdraw', async (req, res) => {
 router.post('/set-bet', async (req, res) => {
   Bookie.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
     .then(bookie => {
-      if (req.body.params.freebet === "false") {
+      if (!req.body.params.freebet) {
         bookie.balance -= req.body.params.backAmount
       }
       bookie.inplay += req.body.params.backAmount

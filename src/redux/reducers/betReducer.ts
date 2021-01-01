@@ -7,7 +7,8 @@ import {
   TODAYS_BETS_SETTLED,
   CHECKING_TODAYS_BETS,
   SETTLING_OLD_BETS,
-  SETTELD_OLD_BETS
+  SETTELD_OLD_BETS,
+  TODAYS_BETS_LOADING
 } from '../actions/types';
 
 const initialState = {
@@ -29,6 +30,11 @@ export default function (state = initialState, action: any) {
         ...state,
         isLoading: true
       };
+    case TODAYS_BETS_LOADING:
+      return {
+        ...state,
+        isLoading: true
+      }
     case BETS_LOADED:
       return {
         ...state,
@@ -61,11 +67,6 @@ export default function (state = initialState, action: any) {
       return {
         ...state,
         settled_old_bets: true,
-        settling_bets: false
-      }
-    case FIXTURE_ERROR:
-      return {
-        ...state,
         settling_bets: false
       }
     default:
