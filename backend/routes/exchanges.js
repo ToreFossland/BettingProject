@@ -43,33 +43,26 @@ router.post("/add", auth, (req, res) => {
 
 });
 
-router.post("/update-balance", auth, async (req, res) => {
-    await Exchange.findOne({ gnomeId: req.body.gnomeId, name: req.body.name })
+
+router.post('/deposit', async (req, res) => {
+    await Exchange.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
         .then(exchange => {
-            if (req.body.deposit) {
-                exchange.balance = exchange.balance + req.body.balance
-            }
-            else {
-                exchange.balance = exchange.balance - req.body.balance
-            }
+            exchange.balance = exchange.balance + req.body.params.balance
+
             exchange.save()
-                .then(() => res.json('Exchange updated!'))
+                .then(() => res.json('Funds deposited to Exchange!'))
                 .catch(err => res.status(400).json('Error: ' + err));
         })
         .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.post("/update-inplay", auth, async (req, res) => {
-    await Exchange.findOne({ gnomeId: req.body.gnomeId, name: req.body.name })
+router.post('/withdraw', async (req, res) => {
+    await Exchange.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
         .then(exchange => {
-            if (req.body.settled) {
-                exchange.inplay = exchange.inplay - req.body.inplay
-            }
-            else {
-                exchange.inplay = exchange.inplay + req.body.inplay
-            }
+            exchange.balance = exchange.balance - req.body.params.balance
+
             exchange.save()
-                .then(() => res.json('Exchange updated!'))
+                .then(() => res.json('Funds withdrawn from Exchange!'))
                 .catch(err => res.status(400).json('Error: ' + err));
         })
         .catch(err => res.status(400).json('Error: ' + err));
