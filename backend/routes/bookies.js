@@ -79,7 +79,9 @@ router.post('/withdraw', async (req, res) => {
 router.post('/set-bet', async (req, res) => {
   Bookie.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
     .then(bookie => {
-      bookie.balance -= req.body.params.backAmount
+      if (req.body.params.freebet === "false") {
+        bookie.balance -= req.body.params.backAmount
+      }
       bookie.inplay += req.body.params.backAmount
       bookie.save()
         .then(() => res.json('Bookie updated according to bet'))
@@ -108,9 +110,7 @@ router.post('/bet-won', async (req, res) => {
 router.post('/bet-lost', async (req, res) => {
   await Bookie.findOne({ gnomeId: req.body.params.id, name: req.body.params.name })
     .then(bookie => {
-      if (req.body.params.freebet === "false") {
-        bookie.inplay -= req.body.params.backAmount
-      }
+      bookie.inplay -= req.body.params.backAmount
       bookie.save()
         .then(() => res.json(bookie))
         .catch(err => res.status(400).json("Error:" + err))
