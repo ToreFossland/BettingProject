@@ -12,7 +12,6 @@ import {
 } from '../actions/types';
 
 const initialState = {
-  token: localStorage.getItem('token'),
   isLoading: false,
   bets: [],
   todays_bets: [],

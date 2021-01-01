@@ -20,45 +20,50 @@ import { updateBookieBalance, updateExchangeBalance } from './bankActions';
 require('dotenv').config();
 
 // Check token & load user
-export const loadBets = () => (dispatch: Function, getState: Function) => {
+export const loadBets = () => async (dispatch: Function, getState: Function) => {
   // Bet loading
-  dispatch({ type: BETS_LOADING });
-
-  axios
-    .get('http://localhost:5000/bets/', tokenConfig(getState))
-    .then(res =>
-      dispatch({
-        type: BETS_LOADED,
-        payload: res.data
-      })
-    )
-    .catch(err => {
-      dispatch(returnErrors(err.response.data, err.response.status));
-      dispatch({
-        type: AUTH_ERROR
+  const activeGnome = getState().user.activeGnome
+  const token = getState().auth.token
+  if (activeGnome) {
+    dispatch({ type: BETS_LOADING });
+    await axios.get('http://localhost:5000/bets/gnome-bets', { params: { gnomeId: activeGnome }, headers: { 'x-auth-token': token } })
+      .then(res => {
+        dispatch({
+          type: BETS_LOADED,
+          payload: res.data
+        })
+      }
+      )
+      .catch(err => {
+        dispatch(returnErrors(err.response.data, err.response.status));
+        dispatch({
+          type: AUTH_ERROR
+        });
       });
-    });
+  }
 };
 
 
 export const loadTodaysBets = () => (dispatch: Function, getState: Function) => {
   // Bet loading
-  dispatch({ type: TODAYS_BETS_LOADING });
-
-  axios
-    .get('http://localhost:5000/bets/todays-bets/', tokenConfig(getState))
-    .then(res =>
-      dispatch({
-        type: TODAYS_BETS_LOADED,
-        payload: res.data
-      })
-    )
-    .catch(err => {
-      dispatch(returnErrors(err.response.data, err.response.status));
-      dispatch({
-        type: AUTH_ERROR
+  const activeGnome = getState().user.activeGnome
+  if (activeGnome) {
+    dispatch({ type: TODAYS_BETS_LOADING });
+    axios
+      .get('http://localhost:5000/bets/todays-bets/', tokenConfig(getState))
+      .then(res =>
+        dispatch({
+          type: TODAYS_BETS_LOADED,
+          payload: res.data
+        })
+      )
+      .catch(err => {
+        dispatch(returnErrors(err.response.data, err.response.status));
+        dispatch({
+          type: AUTH_ERROR
+        });
       });
-    });
+  }
 };
 
 export const settleOldBets = () => async (dispatch: Function, getState: Function) => {
@@ -138,7 +143,7 @@ async function settleBet(dispatch: Function, getState: Function, bet: any) {
     }
     )
     .catch(err => {
-      dispatch(returnErrors({ msg: 'Cannot find temaId. Check that homeTeam is correct' }, err.response.status))
+      dispatch(returnErrors(err.response.data, err.response.status))
     })
 
   return bet

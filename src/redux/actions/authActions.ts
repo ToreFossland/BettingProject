@@ -16,8 +16,7 @@ import { IAuthFunction, IConfigHeaders } from '../../types/interfaces';
 export const loadUser = () => (dispatch: Function, getState: Function) => {
   // User loading
   dispatch({ type: USER_LOADING });
-  axios
-    .get('http://localhost:5000/users/', tokenConfig(getState))
+  axios.get('http://localhost:5000/users/', tokenConfig(getState))
     .then(res =>
       dispatch({
         type: USER_LOADED,
@@ -48,12 +47,19 @@ export const register = ({ username, email, password, passwordCheck }: IAuthFunc
 
   axios
     .post('http://localhost:5000/users/register', body, config)
-    .then(res =>
+    .then(res => {
       dispatch({
         type: REGISTER_SUCCESS,
         payload: res.data
       })
-    )
+      axios.get('http://localhost:5000/users/', { headers: { 'x-auth-token': res.data.token } })
+        .then(res =>
+          dispatch({
+            type: USER_LOADED,
+            payload: res.data
+          })
+        )
+    })
     .catch(err => {
       dispatch(
         returnErrors(err.response.data, err.response.status, 'REGISTER_FAIL')
@@ -80,12 +86,19 @@ export const login = ({ email, password }: IAuthFunction) => (
 
   axios
     .post('http://localhost:5000/users/login', body, config)
-    .then(res =>
+    .then(res => {
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data
       })
-    )
+      axios.get('http://localhost:5000/users/', { headers: { 'x-auth-token': res.data.token } })
+        .then(res =>
+          dispatch({
+            type: USER_LOADED,
+            payload: res.data
+          })
+        )
+    })
     .catch(err => {
       dispatch(
         returnErrors(err.response.data, err.response.status, 'LOGIN_FAIL')

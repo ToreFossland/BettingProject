@@ -15,7 +15,6 @@ import {
 import { IExistingBookie, IExistingExchange } from "../../types/interfaces"
 
 const initialState = {
-    token: localStorage.getItem('token'),
     isLoading: false,
     bookies: [],
     exchanges: [],

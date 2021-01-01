@@ -32,9 +32,11 @@ const columns: ColDef[] = [
 
 const BetList = () => {
     const { bets } = useSelector((state: RootState) => state.bet)
+    const { activeGnome } = useSelector((state: RootState) => state.user)
     useEffect(() => {
         store.dispatch(checkTodaysBets());
     }, [bets]);
+
     return (
         <div style={{ height: 1000, width: '100%' }}>
             {bets ?

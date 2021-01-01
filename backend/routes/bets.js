@@ -12,7 +12,7 @@ router.get("/", auth, async (req, res) => {
 });
 
 router.get("/gnome-bets", auth, async (req, res) => {
-  const bet = await Bet.find({ gnomeId: req.body.gnomeId })
+  const bet = await Bet.find({ gnomeId: req.query.gnomeId })
   res.json(
     bet
   )
@@ -94,6 +94,7 @@ router.get('/todays-bets', auth, async (req, res) => {
   let tomorrow = new Date(today)
   tomorrow.setDate(tomorrow.getDate() + 1)
   await Bet.find({
+    'userId': req.user,
     'betDate': {
       $gte: today,
       $lte: tomorrow
@@ -106,7 +107,9 @@ router.get('/todays-bets', auth, async (req, res) => {
 
 router.get('/unsettled-bets', auth, async (req, res) => {
   let today = new Date().toISOString().slice(0, 10)
+  const bet = await Bet.find({ userId: req.user })
   await Bet.find({
+    'userId': req.user,
     'betDate': {
       $lt: today,
     },

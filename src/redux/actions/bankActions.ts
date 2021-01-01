@@ -55,22 +55,26 @@ export const loadExchanges = () => (dispatch: Function, getState: Function) => {
 
 export const loadWallets = () => (dispatch: Function, getState: Function) => {
     // Wallets loading
-    dispatch({ type: WALLET_LOADING });
 
-    axios
-        .get('http://localhost:5000/wallets/', tokenConfig(getState))
-        .then(res =>
-            dispatch({
-                type: WALLET_LOADED,
-                payload: res.data
-            })
-        )
-        .catch(err => {
-            dispatch(returnErrors(err.response.data, err.response.status));
-            dispatch({
-                type: AUTH_ERROR
+    const activeGnome = getState().user.activeGnome
+    if (activeGnome) {
+        dispatch({ type: WALLET_LOADING });
+
+        axios
+            .get('http://localhost:5000/wallets/', tokenConfig(getState))
+            .then(res =>
+                dispatch({
+                    type: WALLET_LOADED,
+                    payload: res.data
+                })
+            )
+            .catch(err => {
+                dispatch(returnErrors(err.response.data, err.response.status));
+                dispatch({
+                    type: AUTH_ERROR
+                });
             });
-        });
+    }
 };
 
 export async function updateBookieBalance(dispatch: Function, bet: any) {
@@ -113,7 +117,7 @@ export async function updateExchangeBalance(dispatch: Function, bet: any) {
     if (!bet.didWin) {
         await axios.post('http://localhost:5000/exchanges/bet-won', {
             params: {
-                id: bet.gnomeId,
+                id: bet.userId,
                 name: bet.exchange,
                 layAmount: bet.layAmount,
                 layOdds: bet.layOdds,
@@ -130,7 +134,7 @@ export async function updateExchangeBalance(dispatch: Function, bet: any) {
     else {
         await axios.post('http://localhost:5000/exchanges/bet-lost', {
             params: {
-                id: bet.gnomeId,
+                id: bet.userId,
                 name: bet.exchange,
                 layAmount: bet.layAmount,
                 layOdds: bet.layOdds

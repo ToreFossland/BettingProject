@@ -130,6 +130,7 @@ export interface IAction {
 export interface IExistingBet {
   _id: string;
   userId: String;
+  gnomeId: String;
   placeDate: Date;
   betDate: Date;
   event: String;

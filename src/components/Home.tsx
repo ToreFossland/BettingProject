@@ -21,12 +21,13 @@ import { IBetReduxProps } from '../types/interfaces';
 
 function Home() {
     const { settled_old_bets } = useSelector((state: RootState) => state.bet)
+    const { isLoading } = useSelector((state: RootState) => state.user)
     useEffect(() => {
         store.dispatch(loadWallets());
         store.dispatch(loadBets());
         store.dispatch(loadTodaysBets());
         store.dispatch(settleOldBets())
-    }, [settled_old_bets]);
+    }, [settled_old_bets, isLoading]);
     return (
         <Grid container spacing={5} alignItems="flex-end" >
             <Grid item xs={12}>
